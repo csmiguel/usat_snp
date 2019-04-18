@@ -6,7 +6,7 @@
 ###.............................................................................
 #GOAL: read dartseq and usat genotypes and metadata and save them as R objects
 #DESCRIPTION:
-#PROJECT: usat_snp (https://github.com/csmiguel/rana_iberica)
+#PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 #  REQUIRED FILES:
 #   Description: read data/raw/readme

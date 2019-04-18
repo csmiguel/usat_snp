@@ -1,5 +1,4 @@
 #Description of raw data
-2019-01-14_lab_Pelobate-DArT-TrackFile.csv
 
 #1. Genotypes:
 #   1.1 microsatellite
@@ -26,8 +25,11 @@
             table-s1-data.csv
 #   2.2 SNPs
         #hyla#
-        
+        - from different sources compiled by me.
+        metadata_hyla_dartseq.xlsx
         #pelobates#
+        - created by Adam (see email 3 January 2019)
+        2019-01-03_meta_Pelobates.csv
 
 
 
