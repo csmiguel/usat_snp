@@ -1,0 +1,7 @@
+#ignore .temp files
+*.temp
+#ignore other files
+*.zip
+*.DS_Store
+*.rds
+*.log
