@@ -1,0 +1,55 @@
+ID ,Locality,Sample Codes,N,Longitude,Latitude
+1,"Tocha, Cantanhede, Coimbra, Portugal","IMS3831A, IMS3831F, IMS3832, PC799-PC803",9,-8.796,40.352
+2,"Paramos, Espinho, Aveiro, Portugal",PC679-PC682,19,-8.644,40.981
+3,"O Grove, Pontevedra, Spain",PC721-PC724,10,-8.874,42.45
+4,"Bemposta, Mogadouro, Bragança, Portugal",IMS2811-IMS2814,10,-6.492,41.326
+5,"Carpio de Azaba, Salamanca, Spain",PC658-PC661,10,-6.609,40.592
+6,"Valdunciel, Salamanca, Spain",IMS3083-IMS3086,10,-5.697,41.129
+7,"Izagre, León, Spain","IMS3173-IMS3175, IMS3177",10,-5.269,42.218
+8,"Valdefinjas, Zamora, Spain",IMS3117-IMS3120,10,-5.467,41.435
+9,"Aldeaseca de Alba, Salamanca , Spain",PC605-PC608,10,-5.46,40.808
+10,"Autilla del Pino, Palencia, Spain","IMS3061-IMS3062,  IMS3066-IMS3067",10,-4.626,41.99
+11,"Villamayor de los Montes, Burgos, Spain",IMS4045-IMS4048,10,-3.734,42.095
+12,"Boceguillas,  Segovia, Spain",IMS4074-IMS4077,10,-3.618,41.33
+13,"Montuenga de Soria, Arcos de Jalón, Soria, Spain",IMS2612,4,-2.21,41.225
+14,"Noviercas, Soria, Spain",PC821-PC824,10,-2.029,41.713
+15,"Fuendetodos, Zaragoza, Spain","IMS2294-IMS2296, PC837-PC840",13,-0.932,41.337
+16,"Arnedo, La Rioja, Spain","IMS3886-IMS3888, IMS3890",10,-2.036,42.288
+17,"Cabanillas, Navarra, Spain",IMS3896-IMS3899,10,-1.488,42.06
+18,"Plage Biscarrosse, Landes, Aquitaine, France",IMS3979-IMS3982,10,-1.249,44.457
+19,"Valflaunes, Hérault, Languedoc-Roussillon, France",PC905-PC908,10,3.863,43.847
+20,"Montblanc, Hérault, Languedoc-Roussillon, France",PC885-PC888,10,3.355,43.359
+21,"Riudarenes, Girona, Spain",PC865-PC868,9,2.718,41.829
+22,"Lleida, Lleida, Spain",PC845-PC848,10,0.677,41.524
+23,"Tivissa, Tarragona, Spain","PC926-PC927, PC930-PC931",8,0.666,40.988
+24,"Banyeres de Mariola, Alicante, Spain",IMS3162-IMS3165,10,-0.737,38.75
+25,"Sinarcas, Valencia, Spain",IMS3329-IMS3332,19,-1.239,39.763
+26,"La Parroquia, Lorca, Murcia, Spain",IMS4385-IMS4387,10,-1.943,37.749
+27,"Los Palancares, Cuenca, Spain",IMS3349-IMS3351,10,-1.984,40.024
+28,"Gárgoles, Cifuentes, Guadalajara, Spain","IMS2616, IMS2626",6,-2.627,40.74
+29,"Bienservida, Albacete, Spain","IMS3225-IMS3227, IMS3229",10,-2.712,38.55
+30,"Valdemanco, Madrid, Spain",PC0901-PC0903,19,-3.645,40.853
+31,"Los Escoriales, Andújar, Jaén, Spain",PC376-PC379,10,-3.924,38.18
+32,"Malagón, Ciudad Real, Spain",PC650-PC653,8,-3.91,39.179
+33,"Cabezarrubias del Puerto, Ciudad Real, Spain ",IMS3419-IMS3420,10,-4.257,38.569
+34,"Menasalbas, Toledo, Spain",PC627-PC630,10,-4.357,39.662
+35,"Loja, Granada, Spain",PC941-PC943,10,-4.173,37.114
+36,"Villanueva del Duque, Córdoba, Spain",PC393-PC396,10,-5.007,38.311
+37,"Navalmoral de la Mata, Cáceres, Spain",IMS2799-IMS2802,10,-5.547,39.908
+38,"Malpartida de Cáceres, Cáceres, Spain",PC778-PC781,10,-6.505,39.463
+39,"Don Benito, Badajoz, Spain","PC585, PC587-PC589",9,-5.845,38.962
+40,"El Pedroso, Sevilla, Spain","PC406-PC408, PC410",10,-5.785,37.828
+41,"Benalup-Casas Viejas, Cádiz, Spain",IMS4415-IMS4418,10,-5.767,36.323
+42,"Valencia de Alcántara, Cáceres, Spain",PC808-PC811,9,-7.225,39.444
+43,"Burguillos del Cerro, Badajoz, Spain",PC557-PC560,10,-6.64,38.358
+44,"Doñana, Almonte, Huelva, Spain",PC700-PC703,19,-6.455,36.989
+45,"Redondo, Évora, Portugal",PC737-PC740,10,-7.653,38.65
+46,"Sedas, Espirito Santo, Mértola, Beja, Portugal",PC448-PC451,10,-7.599,37.537
+47,"Boticos, Abela, Santiago do Cacém, Setúbal, Portugal",PC469-PC472,19,-8.492,38.005
+48,"Porto Covo, Sines, Setúbal, Portugal",PC934-PC935,7,-8.784,37.86
+49,"Faro, Faro, Portugal",PC757-PC760,10,-7.979,37.051
+50,"Pataias, Alcobaça, Leiria, Portugal",IMS2828,0,-9.009,39.681
+51,"Évora, Évora, Portugal",PC492,0,-7.928,38.556
+52,"Gaitán, Murcia, Spain",M5120-M5121,0,-1.409,38.595
+53,"Valcárcel, Murcia, Spain",M5122,0,-1.622,38.147
+54,"Tarifa, Cádiz, Spain",M40282-M40283,0,-5.618,36.027

@@ -1,0 +1,37 @@
+#Description of raw data
+2019-01-14_lab_Pelobate-DArT-TrackFile.csv
+
+#1. Genotypes:
+#   1.1 microsatellite
+        #hyla#
+            - copied from 10.1111/jbi.13515 and formatted by Jeff
+            appendix-s2.txt
+        #pelobates#
+            - emailed from Iñigo Martínez-Solano (doi:10.1111/jbi.12791)
+            PcultripesPhylogeography.gen
+
+#   1.2 SNPs (Dartseq 1 singlerow)
+        #hyla#
+            Report_DHyl17-2984_1_moreOrders_SNP_singlerow_2.csv
+        #pelobates#
+            Report_DPelo19-4013_SNP_mapping_2.csv
+
+#2. Metadata
+#   2.1 microsatellite
+        #hyla#
+            - formatted by Jeff and copied from 10.1111/jbi.13515
+            table-1-data.csv
+        #pelobates#
+            - formatted by Jeff. Copied from 10.1111/jbi.12791
+            table-s1-data.csv
+#   2.2 SNPs
+        #hyla#
+        
+        #pelobates#
+
+
+
+
+
+
+

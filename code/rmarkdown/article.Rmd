@@ -1,0 +1,95 @@
+---
+title: "Phylogeographic inference with microtellite and SNPs"
+author: |
+  | Miguel Camacho-Sanchez${\ast^1}$, Guillermo Velo-Antón$^{1}$, Ana Veríssimo$^1$, Silvia Carvalho$^2$
+  | $^1$ CIBIO/InBIO, Centro de Investigação em Biodiversidade e Recursos Genéticos da Universidade do Porto, Vairão, Portugal
+  | Correspondence should be addressed to miguelcamachosachez@gmail.com
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  rmarkdown::pdf_document:
+    toc: false
+    keep_tex: true
+    fig_caption: yes
+    includes:
+      in_header: preamble.tex
+fontsize: 11pt
+documentclass: article
+subparagraph: true
+---
+
+```{r, include = FALSE}
+knitr::opts_knit$set(root.dir = normalizePath("../.."))
+```
+
+```{r, include = FALSE}
+# restore session
+gen <- readRDS("data/intermediate/raw_genotypes.RDS")
+# load packages
+# define helper functions
+# load data
+
+```
+
+# MANUSCRIPT INFORMATION
+
+\clearpage
+
+# ABSTRACT
+
+TODO
+
+\clearpage
+
+# 1 | INTRODUCTION
+
+
+
+# 2 | MATERIALS AND METHODS
+
+
+## Study area and species
+
+
+## Data
+
+
+
+# 3 | RESULTS
+
+* result 1: sequencing
+We sequenced a total of ´r adegenet::nInd(gen)´ samples which included 1 replica. DArTseq genotyped ´r adegenet::nLoc(gen)´SNPs in ´r nlevels(as.factor(gen@other$loc.metrics$CloneID))´ loci. The overall missing data was ´r ´ ()
+
+* result 2: structure vs dapc
+
+* result 3: genetic diversity
+
+
+# 4 | DISCUSSION
+
+* Overview
+
+* Key result 1
+
+* Key result 2
+
+* Key result 3
+
+* Concluding paragraph
+
+# AUTHORS' CONTRIBUTIONS
+
+TODO
+
+# DATA ACCESSIBILITY
+
+
+
+# ORCID
+
+Miguel Camacho-Sanchez: 0000-0002-6385-7963 \newline
+Guillermo Velo-Antón: 0000-0002-9483-5695 \newline
+Ana Veríssimo: 0000-0003-3396-9822 \newline
+JEFF ADAM PEDRO?
+Silvia B. Carvalho: 0000-0003-4368-4708 \newline
+
+# REFERENCES

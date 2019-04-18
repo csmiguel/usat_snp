@@ -1,0 +1,18 @@
+---
+title: "Supporting Information: Phylogeographic inference with microsatellites and SNPs"
+author: |
+  | Miguel Camacho-Sanchez${\ast^1}$, Guillermo Velo-Antón$^{1}$, Ana Veríssimo$^1$, Silvia Carvalho$^2$
+  | $^1$ CIBIO/InBIO, Centro de Investigação em Biodiversidade e Recursos Genéticos da Universidade do Porto, Vairão, Portugal
+  | Correspondence should be addressed to miguelcamachosachez@gmail.com
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  rmarkdown::pdf_document:
+    toc: false
+    keep_tex: true
+    fig_caption: yes
+    includes:
+      in_header: preamble.tex
+fontsize: 11pt
+documentclass: article
+subparagraph: true
+---
