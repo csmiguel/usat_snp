@@ -32,12 +32,13 @@ metadata_Dartseq_Pelobates <- function(x){
   assertthat::assert_that(class(x$pelo) == "genlight")
   m_darseq_id <- m[["dartseqID"]]
   g_dartseq_id <- indNames(x$pelo)
-  assertthat::assert_that(all(g_dartseq_id %in% m_darseq_id))
+  assertthat::assert_that(all(g_dartseq_id %in% m_darseq_id), msg =
+  "some names in genotypes are missing in metadata")
   #fix pop names
   assertthat::assert_that(!is.null(c(m[["dartseqID"]], m[["locality"]])))
   pop(x$pelo) <- sapply(g_dartseq_id, function(x){
     which(m[["dartseqID"]] == x) %>% m[["locality"]][.]
-  })
+  }) %>% unlist()
   metadata_pelo <<- m
   return(x)
 }

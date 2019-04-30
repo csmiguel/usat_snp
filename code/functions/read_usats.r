@@ -110,9 +110,11 @@ read_Hyla_molleri <- function() {
   o[nchar(o) == 2] <- paste0("0", o[nchar(o) == 2])
   o2 <- matrix("", ncol = ncol(o) / 2, nrow = nrow(o),
                dimnames = list(g$sample_id, colnames(o)[seq(1, ncol(o), 2)]))
-  for (i in seq_len(ncol(o2)))
-    o2[, i] <- paste0(o[, i], "/", o[, i + 2])
-  o2 <- adegenet::df2genind(o2, ploidy = 2, sep = "/", type = "codom",
+  cols <- seq(1, ncol(o), 2)
+  for (i in seq_along(cols)){
+    o2[, i] <- paste0(o[, cols[i]], "/", o[, cols[i] + 1])
+  }
+   o2 <- adegenet::df2genind(o2, ploidy = 2, sep = "/", type = "codom",
                             NA.char = "000")
   ## add in population data
   g2 <- dplyr::left_join(g, s, by = c("population_id" = "id"))

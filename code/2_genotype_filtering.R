@@ -20,16 +20,23 @@ library(dplyr)
 
 source("code/functions/gl_stats.r")
 source("code/functions/ind_miss.r")
+source("code/functions/remove_replica.r")
 
 input_path <- paste0("data/intermediate/raw_genotypes.rds")
 gen <- readRDS(file = input_path)
 
 #summary statistics for raw data
 raw_stats <- geno_stats(genlist = gen, data = "raw")
+
 ##################
 #Filtering
-source("code/parameters/gl_cleaning.r")
 sink(file = "data/intermediate/filtering.log")
+  #remove replica from Pelobates:
+      #for Pelobates Ana included a blind
+      #replica named 108541 from sample 106854.
+gen$dart_pelo <- remove_replica(gen = gen$dart_pelo, "108541", "106854")
+  #filter SNPs
+source("code/parameters/gl_cleaning.r")
 gen_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
   {genfiltnames <<- names(gen)[.]; .} %>%
   seq_along() %>%
