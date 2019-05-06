@@ -1,5 +1,8 @@
 bs_analysis <- function(tr, bs, mode = c(1, 2)){
 #calculate max length for each tree
+  library(ggplot2)
+  require(gridExtra)
+
   tr1 <- tr[[1]][[1]]
   tr2 <- tr[[1]][-1]
   bs <- bs / nboot
@@ -17,7 +20,7 @@ bs_analysis <- function(tr, bs, mode = c(1, 2)){
   dnn <- ape::dist.nodes(tr1)[-c(1:Ntip(tr1)), -c(1:Ntip(tr1))] #issue: check calculations
 
   #check node names are sorted in increasing order
-  assertthat::assert_that( (as.numeric(rownames(dnn))[length(rownames(dnn))]  -
+  assertthat::assert_that((as.numeric(rownames(dnn))[length(rownames(dnn))]  -
    as.numeric(rownames(dnn))[1] + 1) / length(rownames(dnn)) == 1)
 
   dnnmin <- numeric(nrow(dnn)) #issue: check calculations
@@ -35,12 +38,14 @@ bs_analysis <- function(tr, bs, mode = c(1, 2)){
   assertthat::assert_that(length(dnnmin) == length(dno))
   assertthat::assert_that(length(dno) == length(bs))
   #statistics
-  dnnmin.c <- summary(lm(bs~dnnmin))
-    dnnmin.c.r <- dnnmin.c$adj.r.squared %>% round(3)
-    dnnmin.c.s <- dnnmin.c$coefficients[2, 4] %>% formatC(format = "e", digits = 2)
-  dno.c <- summary(lm(bs~dno))
-    cdno.c.r <- dno.c$adj.r.squared %>% round(3)
-    cdno.c.s <- dno.c$coefficients[2, 4] %>% formatC(format = "e", digits = 2)
+  dnnmin.glm <- summary(glm(bs~dnnmin, family = binomial()))
+    dnnmin.glm.e <- dnnmin.glm$coefficients[2, 1] %>% round(3)
+    dnnmin.glm.s <- dnnmin.glm$coefficients[2, 4] %>%
+      formatC(format = "e", digits = 2)
+  dno.glm <- summary(glm(bs~dno, family = binomial()))
+    dno.glm.e <- dno.glm$coefficients[2, 1] %>% round(3)
+    dno.glm.s <- dno.glm$coefficients[2, 4] %>%
+      formatC(format = "e", digits = 2)
   #create color palette
   colorfun <- colorRamp(c("red", "blue"))
   pal <- colorfun(bs)
@@ -52,10 +57,10 @@ if (mode == 1){
       xlab = "Depth in the tree",
       main = paste("BS across the tree ", names(tr)),
       xlim = c(0, .35), ylim = c(0, .13))
-    text(0.1, 0.1, paste0("depth: p-value = ", cdno.c.s,
-     "; R^2 = ", cdno.c.r), cex = 0.7)
-    text(0.1, 0.09, paste0("closest node: p-value = ", dnnmin.c.s,
-      "; R^2 = ", dnnmin.c.r), cex = 0.7)
+    text(0.1, 0.1, paste0("depth: p-value = ", dno.glm.s,
+     "; estimate = ", dno.glm.e), cex = 0.7)
+    text(0.1, 0.09, paste0("closest node: p-value = ", dnnmin.glm.s,
+      "; estimate = ", dnnmin.glm.e), cex = 0.7)
     } else if (mode == 2){
       plot(dno, bs, pch = 20,
           xlab = "Depth in the tree",
@@ -63,8 +68,8 @@ if (mode == 1){
           main = names(tr),
           xlim = c(0, .35),
           ylim = c(0, 1))
-        text(0.1, 0.1, paste0("depth: p-value = ", cdno.c.s,
-         "; R^2 = ", cdno.c.r), cex = 0.7)
+        text(0.1, 0.1, paste0("depth: p-value = ", dno.glm.s,
+         "; estimate = ", dno.glm.e), cex = 0.7)
     } else if (mode == 3){
       plot(dnnmin, bs, pch = 20,
           xlab = "Distance to the closest deeper node",
@@ -72,7 +77,7 @@ if (mode == 1){
           main = names(tr),
           xlim = c(0, .14),
           ylim = c(0, 1))
-        text(0.1, 0.09, paste0("closest node: p-value = ", dnnmin.c.s,
-          "; R^2 = ", dnnmin.c.r), cex = 0.7)
+        text(0.1, 0.09, paste0("closest node: p-value = ", dnnmin.glm.s,
+          "; estimate = ", dnnmin.glm.e), cex = 0.7)
     }
   }

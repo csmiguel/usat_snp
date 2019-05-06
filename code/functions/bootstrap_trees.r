@@ -16,7 +16,7 @@ bootstrap_nj <- function(gen, nboot = 100, type = c("usat", "snp")){
   }
   else if (type == "snp"){
     assertthat::assert_that(class(gen) == "genlight", msg = "not genlight")
-    assertthat::assert_that(ncol(gen) > 1000, msg = "too few loci")
+    assertthat::assert_that(ncol(gen) > 100, msg = "too few loci")
     gen_matrix <- as.matrix(gen)
     gen.d <- gen_matrix[, sample(1:ncol(gen_matrix),
       size = ncol(gen_matrix), replace = T)] %>% dist()

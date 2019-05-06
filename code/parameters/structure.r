@@ -1,4 +1,4 @@
-burnin_usat = 10000
+burnin_usat = 500000 #as in Gutiérrez-Rodríguez et al. 2017 and Sánchez-Montes et al. 2019
 burnin_snp = 10000
-run_usat = 20000
+run_usat = 1000000 #as in Gutiérrez-Rodríguez et al. 2017 and Sánchez-Montes et al. 2019
 run_snp = 20000
