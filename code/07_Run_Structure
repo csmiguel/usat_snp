@@ -1,0 +1,18 @@
+#!bin/bash
+#follow structure_threader installations at
+#https://structure-threader.readthedocs.io/en/latest/install/
+#follow structure installation at
+#https://web.stanford.edu/group/pritchardlab/home.html
+
+for i in data/intermediate/str*
+do
+d=$(echo $i | sed 's/^.*str_/data\/final\/run_/1')
+mkdir $d
+~/.local/bin/structure_threader run -K 8 -R 10 \
+-i $i/*.str \
+-o $d \
+-t 8 \
+-st ~/.local/bin/structure \
+--log 1 \
+--params $i/mainparams
+done > data/intermediate/structure_threader.log
