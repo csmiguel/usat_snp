@@ -38,6 +38,10 @@ read_Pelobates_cultripes <- function() {
                      stringsAsFactors = FALSE)
         })
     }) %>%
+    mutate(Locality = as.character(Locality) %>% #simplify pop names
+    gsub("^[0-9].*a, ", "", .) %>%
+    gsub(",.*$", "", .) %>%
+    gsub("‐.*$", "", .))
     tibble::as_tibble()
   ## add in population data,
   ### since we only have sample ids for individuals with mtDNA data,
@@ -46,9 +50,9 @@ read_Pelobates_cultripes <- function() {
   ### as sample B, and we known that sample B is in population A then we know
   ### that sample A is in population A
   s2 <- tibble::tibble(sample_id = rownames(o@tab),
-                       population_id = as.character(o@pop)) %>%
+                       locality = as.character(o@pop)) %>%
        dplyr::left_join(s, by = c("sample_id" = "Sample.Code")) %>%
-       plyr::ddply("population_id", function(x) {
+       plyr::ddply("locality", function(x) {
          if (!all(is.na(x$ID))) {
            x$ID <- na.omit(x$ID)[[1]]
            x$Locality <- na.omit(x$Locality)[[1]]
@@ -62,7 +66,7 @@ read_Pelobates_cultripes <- function() {
                          by = "sample_id")
   ### fortunately it appears that only one population did not have any mtDNA
   ### samples so we can manually define the  popuation ids for this population
-  assertthat::assert_that(dplyr::n_distinct(s2$population_id[is.na(s2$ID)]) ==
+  assertthat::assert_that(dplyr::n_distinct(s2$locality[is.na(s2$ID)]) ==
                           1)
   missing_population <- setdiff(unique(s$ID), unique(s2$ID[!is.na(s2$ID)]))
   assertthat::assert_that(assertthat::is.number(missing_population))
@@ -81,7 +85,7 @@ read_Pelobates_cultripes <- function() {
   o@other <-
     s2 %>%
     dplyr::select(sample_id, Locality, Longitude, Latitude) %>%
-    dplyr::rename(population_id = Locality, x = Longitude, y = Latitude) %>%
+    dplyr::rename(locality = Locality, x = Longitude, y = Latitude) %>%
     {sp::SpatialPointsDataFrame(data = .[, c(1, 2), drop = FALSE],
                                 coords = .[, c("x", "y")])} %>%
     as("sf") %>%
@@ -96,12 +100,16 @@ read_Hyla_molleri <- function() {
                   header = FALSE, sep = ";", stringsAsFactors = FALSE,
                   skip = 1, comment.char = "") %>%
        tibble::as_tibble() %>%
-       dplyr::rename(sample_id = V1, population_id = V2)
+       dplyr::rename(sample_id = V1, locality = V2)
        g[["sample_id"]] <- gsub(pattern = "^.*#", #m
                       replacement = "", g[["sample_id"]]) #m
 
   s <- read.table("data/raw/table-1-data.csv",
-                  header = TRUE, sep = ",", stringsAsFactors = FALSE) %>%
+              header = TRUE, sep = ",", stringsAsFactors = FALSE) %>%
+                mutate(locality = as.character(locality) %>% #simplify pop names
+                gsub("^[0-9].*a, ", "", .) %>%
+                gsub(",.*$", "", .) %>%
+                gsub("‐.*$", "", .)) %>%
        tibble::as_tibble()
   ## create genind object
   o <- as.matrix(g[, c(-1, -2)])
@@ -117,11 +125,11 @@ read_Hyla_molleri <- function() {
    o2 <- adegenet::df2genind(o2, ploidy = 2, sep = "/", type = "codom",
                             NA.char = "000")
   ## add in population data
-  g2 <- dplyr::left_join(g, s, by = c("population_id" = "id"))
-  o2@pop <- factor(g2$locality)
+  g2 <- dplyr::left_join(g, s, by = c("locality" = "id"))
+  o2@pop <- factor(g2$locality.y)
   ## add in sample location data
-  s2 <- g2[, c("sample_id", "locality", "long", "lat")] %>%
-        setNames(c("sample_id", "population_id", "x", "y")) %>%
+  s2 <- g2[, c("sample_id", "locality.y", "long", "lat")] %>%
+        setNames(c("sample_id", "locality", "x", "y")) %>%
         dplyr::mutate(x = gsub("−", "-", x, fixed = TRUE)) %>%
         dplyr::mutate(x = as.numeric(x), y = as.numeric(y)) %>%
         {sp::SpatialPointsDataFrame(data = .[, c(1, 2), drop = FALSE],

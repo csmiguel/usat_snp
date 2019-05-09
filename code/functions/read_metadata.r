@@ -1,4 +1,4 @@
-#read metadata hyla
+#read metadata for dartseq samples
 metadata_Dartseq_Hyla <- function(x){
   f <- "data/raw/metadata_hyla_dartseq.xlsx"
   m <- readxl::read_excel(f)
@@ -16,7 +16,20 @@ assertthat::assert_that(!is.null(c(m[["dartseqID"]],
   pop(x$hyla) <- sapply(g_dartseq_id, function(x){
     which(m[["dartseqID"]] == x) %>% m[["locality"]][.]
   })
-  metadata_hyla <<- m
+  metadata_darthyla <<- m %>%
+              select(id, locality, latitude, longitude) %>%
+              mutate(latitude = as.numeric(latitude)) %>%
+              mutate(longitude = as.numeric(longitude)) %>%
+              filter(id %in% indNames(x$hyla)) %>%
+              rename(sample_id = id) %>%
+              #convert to spatial object
+              {sp::SpatialPointsDataFrame(data = .[, c(1, 2),
+              drop = FALSE], coords = .[, c("latitude", "longitude")])} %>%
+              as("sf") %>%
+              sf::st_set_crs(4326)
+  assertthat::assert_that(identical(
+    x = sort(as.character(indNames(x$hyla))),
+    y = sort(as.character(metadata_darthyla$sample_id))))
   return(x)
 }
 
@@ -27,7 +40,11 @@ metadata_Dartseq_Pelobates <- function(x){
     rename(full_locality = site) %>%
     rename(dartseqID = vaucher) %>%
     rename(latitude = lat) %>%
-    rename(longitude = lon)
+    rename(longitude = lon) %>% dplyr::as_tibble() %>%
+    {sp::SpatialPointsDataFrame(data = .[, c(1, 6), drop = FALSE],
+                                coords = .[, c("latitude", "longitude")])} %>%
+    as("sf") %>%
+    sf::st_set_crs(4326)
 
   assertthat::assert_that(class(x$pelo) == "genlight")
   m_darseq_id <- m[["dartseqID"]]
@@ -39,6 +56,8 @@ metadata_Dartseq_Pelobates <- function(x){
   pop(x$pelo) <- sapply(g_dartseq_id, function(x){
     which(m[["dartseqID"]] == x) %>% m[["locality"]][.]
   }) %>% unlist()
-  metadata_pelo <<- m
+  metadata_dartpelo <<- m %>% #select only samples present in the genlight object
+                filter(dartseqID %in% indNames(x$pelo)) %>%
+                rename(sample_id = dartseqID)
   return(x)
 }

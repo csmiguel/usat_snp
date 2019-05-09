@@ -9,16 +9,21 @@ shp_pelo <- rgdal::readOGR(dsn = p_pelo, layer = "data_0") %>%
   sp::spTransform(mapr@crs)
 shp_hyla <- rgdal::readOGR(dsn = p_hyla, layer = "data_0") %>%
   sp::spTransform(mapr@crs)
+  #check I loaded the right layers
+assertthat::assert_that(as.character(
+  shp_hyla@data$BINOMIAL)[1] == "Hyla arborea")
+assertthat::assert_that(as.character(
+  shp_pelo@data$BINOMIAL)[1] == "Pelobates cultripes")
 
   #dartseq locations
-  p_dartmeta <- ""
-  dartmeta <- readRDS()
+  p_dartmeta <- "data/intermediate/metadata_dartseq.rds"
+  dartmeta <- readRDS(p_dartmeta)
   #microsatellite locations
-  p_gen <- ""
-  gen <- readRDS()
-
-assertthat::assert_that(as.character(shp_hyla@data$BINOMIAL)[1] == "Hyla arborea")
-assertthat::assert_that(as.character(shp_pelo@data$BINOMIAL)[1] == "Pelobates cultripes")
+  p_gen <- "data/intermediate/filt_genotypes.rds"
+  gen <- readRDS(p_gen)
+  m_usat_hyla <- gen$usat_hyla$other
+  m_usat_pelo <- gen$usat_pelo$other
+  rm(gen)
 
 #Plot distribution
 plot(mapr, breaks = c(0, 500, 1000, 1500, 2000, 3500),
