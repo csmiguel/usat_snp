@@ -1,0 +1,22 @@
+---
+title: "Figures"
+fontsize: 11pt
+documentclass: article
+subparagraph: true
+output:
+  rmarkdown::pdf_document:
+    fig_caption: yes
+    keep_tex: no
+    includes:
+      in_header: preamble.tex
+---
+
+```{r, include = FALSE}
+knitr::opts_knit$set(root.dir = normalizePath("../.."))
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, dev = "png", dev.args = list(type = "cairo"), dpi = 500, fig.align = "center")
+```
+
+##Figure 1:
+```{r, fig.height = 4.5, fig.width = 4.5, fig.cap = "Distribution and populations sampled in *Hyla molleri* (panel A) and *Pelobates cultripes* (panel B), with corresponding genotype dataset: microsatellite (triangles)  and SNP (circles). The number inside each symbol refer to the population ID for microsatellite data in Sánchez-Montes et al. (2019)(*H. molleri), Gutiérrez-Rodríguez et al. (2017)(*P. cultripes) and SNPs Table 1. The sample sizes for each population are indicated in parenthesis. The distribution for each species is indicated in shaded area, downloaded from the IUCN on May 2019.(xx note: because H. molleri is not in the IUCN database still, I used the distribution of H. arborea)"}
+
+```
