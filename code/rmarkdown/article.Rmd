@@ -29,23 +29,44 @@ gen <- readRDS("data/intermediate/raw_genotypes.RDS")
 # load data
 
 ```
+# Manuscript information
 
-# MANUSCRIPT INFORMATION
+Format: add journal title  \newline
+Abstract word count: xx \newline
+Main word count: xx  \newline
+Number of references: xx  \newline
+Number of figures: xx  \newline
+Number of tables: xx  \newline
+Number of text boxes: xx  \newline
+Number of equations: xx  \newline
+Keywords: microtellites, DArTseq, SNPs, neighbour joining, structure, phylogeography, Hyla molleri, Pelobates cultripes, Iberian Peninsula   \newline
+Spelling: British English (en-GB)   \newline
+\clearpage
+
+# Abstract
+
 
 \clearpage
 
-# ABSTRACT
+# 1. Introduction
+**general overview about the usat vs snp**
+1-which are the characteristics of each marker
+2-how informative are they
+3-pros and cons for both
+4-limitations
+5-previous studies focusing on usats vs SNPs
+**our case study**
+1-study species: characteristics, distrigution, why them
+2-markers datasets
+**brief methodology with results and conclusions**
 
-TODO
 
-\clearpage
-
-# 1 | INTRODUCTION
-
-
-
-# 2 | MATERIALS AND METHODS
-
+# 2. Materials and Methods
+## 2.1 Data collection
+Our analysis are built upon microsatellite and SNP datasets for two Iberian amphibians: *Hyla molleri* and *Pelobates cultripes*. For each species, the microtellite and SNP datasets come from different sample sets but covering both most of their native range (Figure 1).
+The microsatellite genotypes were taken from already-published studies. For *Hyla molleri*, we gathered the microsatellite genotypes from *Appendix 1* in Sánchez-Montes et al. (2019). They consisted of `r adegenet::nInd(gen$usat_hyla)` samples with `r adegenet::nLoc(gen$usat_hyla)` genotyped microsatellites. For *Pelobates cultripes*, we requested the genotypes to the authors in Gutiérrez-Rodríguez et al. (2017). This dataset consisted of `r adegenet::nInd(gen$usat_pelo)` samples with `r adegenet::nLoc(gen$usat_pelo)` genotyped microsatellites.
+The SNP data was generated using DArTseq technology (xx).
+##
 
 ## Study area and species
 
@@ -89,7 +110,10 @@ TODO
 Miguel Camacho-Sanchez: 0000-0002-6385-7963 \newline
 Guillermo Velo-Antón: 0000-0002-9483-5695 \newline
 Ana Veríssimo: 0000-0003-3396-9822 \newline
-JEFF ADAM PEDRO?
+Jeffrey O. Hanson: 0000-0002-4716-6134
+Adam Marques: 0000-0002-6070-0506
 Silvia B. Carvalho: 0000-0003-4368-4708 \newline
+
+\clearpage
 
 # REFERENCES
