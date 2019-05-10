@@ -1,5 +1,5 @@
 #create raster file for the Iberian Peninsula
-path <- "data/raw/raster_iberian_peninsula.rds"
+path <- "data/raw/raster_iberian_peninsula.grd"
 assertthat::assert_that(!file.exists(path),
     msg = paste(path, "already exists"))
 
@@ -19,4 +19,6 @@ for (i in seq_along(o)){
 o$fun <- mean
 o$na.rm <- TRUE
 mapr <- do.call(raster::mosaic, o)
-saveRDS(mapr, path)
+#saveRDS(mapr, path) would not work because it creates a temporary files
+#in the computer which is later removed. Instead it is necessary to writeRaster
+raster::writeRaster(mapr, filename = path, format = "raster")
