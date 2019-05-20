@@ -22,6 +22,7 @@ library(magrittr)
 source("code/functions/gl_stats.r")
 source("code/functions/ind_miss.r")
 source("code/functions/remove_replica.r")
+source("code/functions/coverage_filt.r")
 
 input_path <- paste0("data/intermediate/raw_genotypes.rds")
 gen <- readRDS(file = input_path)
@@ -44,14 +45,18 @@ gen_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
   lapply(function(i){
     sp <- paste(names(gen)[[i]])
     cat(paste0("#log for ", sp), "\n")
+    filt_gen <-
     dartR::gl.filter.callrate(gen[[i]], method = "ind",
     threshold = 1 - ind_miss_thresh, v = 5) %>%
     dartR::gl.filter.repavg(repavg_threshold, v = 5) %>%
-    dartR::gl.filter.callrate(method = "loc",
+  {coverage <<- diff_coverage(.); .} %>% .[, coverage <= cov_th]
+filt_gen@other$loc.metrics <- filt_gen@other$loc.metrics[coverage <= cov_th, ]
+filt_gen %>% dartR::gl.filter.callrate(method = "loc",
       threshold = locus_callrate_threshold, v = 5, recalc = T) %>%
     dartR::gl.filter.secondaries(method = sec_method, v = 5) %>%
     dartR::gl.filter.maf(threshold = min_maf, v = 5) %>%
     {real_pop <<- pop(.); .} %>%
+    #assume all the samples belong to the same large pop.
     `slot<-`("pop", value = factor(rep("all", length(.@ind.names)))) %>%
     dartR::gl.filter.hwe(alpha = hwe_alpha) %>%
     `slot<-`("pop", value = real_pop)

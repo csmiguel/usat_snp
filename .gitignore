@@ -8,3 +8,9 @@
 *.pdf
 .Rhistory
 .Rapp.history
+data/intermediate
+etc
+data/final
+*recycled.R
+*.grd
+*.gri
