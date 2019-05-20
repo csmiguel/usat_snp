@@ -24,10 +24,10 @@ PROGRAM OPTIONS
 #define ALPHA     1.0 // (d) Dirichlet parameter for degree of admixture
                              (this is the initial value if INFERALPHA==1).
 
-#define INFERLAMBDA 0 // (B) Infer LAMBDA (the allele frequencies parameter)
+#define INFERLAMBDA xx // (B) Infer LAMBDA (the allele frequencies parameter)
 #define POPSPECIFICLAMBDA 0 //(B) infer a separate lambda for each pop
                               (only if INFERLAMBDA=1).
-#define LAMBDA    0.67 // (d) Dirichlet parameter for allele frequencies
+#define LAMBDA    1 // (d) Dirichlet parameter for allele frequencies
 
 
 
@@ -112,7 +112,7 @@ MISCELLANEOUS
 #define COMPUTEPROB 1     // (B) Estimate the probability of the Data under
                              the model.  This is used when choosing the
                              best number of subpopulations.
-#define ADMBURNIN  500    // (int) [only relevant for linkage model]:
+#define ADMBURNIN  5000    // (int) [only relevant for linkage model]:
                              Initial period of burnin with admixture model (see
                              Readme)
 #define ALPHAPROPSD 0.025 // (d) SD of proposal for updating alpha

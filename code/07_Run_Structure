@@ -4,15 +4,26 @@
 #follow structure installation at
 #https://web.stanford.edu/group/pritchardlab/home.html
 
-for i in data/intermediate/str*
+###  Warning ######
+# This is not run locally but on the cluster. So pipe is broken here.
+# 1. create folder structure in server if not already done before.
+# mkdir data; mkdir data/final; mkdir data/intermediate
+# 2. copy files from local to server:
+# scp -r data/intermediate/str_* cibio:/home/miguel/ngc/usat_snp/data/intermediate
+# 3. create screen session or reattach to it
+#   - create new screen: screen -S structure
+#   - reattach to preexisting screen -r structure
+# 4. paste below code on screen and detach (cmd + a + d)
+
+for i in data/intermediate/str_*
 do
 d=$(echo $i | sed 's/^.*str_/data\/final\/run_/1')
 mkdir $d
-~/.local/bin/structure_threader run -K 8 -R 10 \
+~/.local/bin/structure_threader run -Klist 2 3 4 5 6 7 8 -R 5 \
 -i $i/*.str \
 -o $d \
 -t 8 \
 -st ~/.local/bin/structure \
 --log 1 \
 --params $i/mainparams
-done > data/intermediate/structure_threader.log
+done

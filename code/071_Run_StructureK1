@@ -1,0 +1,52 @@
+#!bin/bash
+#follow structure_threader installations at
+#https://structure-threader.readthedocs.io/en/latest/install/
+#follow structure installation at
+#https://web.stanford.edu/group/pritchardlab/home.html
+
+###  Warning ######
+# This is not run locally but on the cluster. So pipe is broken here.
+# 1. create folder structure in server if not already done before.
+# mkdir data; mkdir data/final; mkdir data/intermediate
+# 2. copy files from local to server:
+# scp -r data/intermediate/strK1_* cibio:/home/miguel/ngc/usat_snp/data/intermediate
+# 3. create screen session or reattach to it
+#   - create new screen: screen -S structure
+#   - reattach to preexisting screen -r structure
+# 4. paste below code on screen and detach (cmd + a + d)
+
+for i in data/intermediate/strK1_*
+do
+d=$(echo $i | sed 's/^.*strK1_/data\/final\/runK1_/1')
+mkdir $d
+~/.local/bin/structure_threader run -K 1 -R 3 \
+-i $i/*.str \
+-o $d \
+-t 8 \ #anyways the max number of process to paralellize is it is K * R = 3
+-st ~/.local/bin/structure \
+--log 1 \
+--params $i/mainparams
+done
+
+#The number of processes to run in paralle is limitted to the maximum number
+# of processes in each loop
+#an alternative to speed up processing if diferent datasets are used is
+#to forget loops.
+
+mkdir data/final/runK1_dart_hyla
+~/.local/bin/structure_threader run -K 1 -R 3 \
+-i data/intermediate/strK1_dart_hyla/dart_hyla.str \
+-o data/final/runK1_dart_hyla \
+-t 8 \
+-st ~/.local/bin/structure \
+--log 1 \
+--params data/intermediate/strK1_dart_hyla/mainparams
+
+mkdir data/final/runK1_dart_pelo
+~/.local/bin/structure_threader run -K 1 -R 3 \
+-i data/intermediate/strK1_dart_pelo/dart_pelo.str \
+-o data/final/runK1_dart_pelo \
+-t 8 \
+-st ~/.local/bin/structure \
+--log 1 \
+--params data/intermediate/strK1_dart_pelo/mainparams
