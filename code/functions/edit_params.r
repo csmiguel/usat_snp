@@ -1,7 +1,7 @@
 source("code/parameters/structure.r")
 options(scipen = 10)
 #edit mainparams file for each STRUCTURE run
-
+#create extraparams file for structure input
 edit_mainparams <- function(gl = gl, name = name,
   str_file = str_file, dir_str = dir_str){
   param <- readLines("data/raw/mainparams")
@@ -32,6 +32,7 @@ edit_mainparams <- function(gl = gl, name = name,
   writeLines(param, mainparams_path)
 }
 
+#create extraparams file for structure input
 edit_extraparams <- function(gl = gl, name = name,
   str_file = str_file, dir_str = dir_str, mode = mode){
   param <- readLines("data/raw/extraparams")
@@ -53,3 +54,49 @@ edit_extraparams <- function(gl = gl, name = name,
   mainparams_path <- file.path(dir_str, "extraparams")
   writeLines(param, mainparams_path)
 }
+
+#create structure inputs for dart and usat data
+create_str_input <- function(mode = c("normal", "K1")){
+  if (mode == "K1") gen <- gen[grepl("dart", names(gen))]
+seq_along(gen) %>%
+  sapply(function(x){
+    if (mode == "K1") dirn <- "strK1_" else if (mode == "normal") dirn <- "str_"
+    dir_str <- file.path("data/intermediate", paste0(dirn, names(gen)[x]))
+    dir.create(dir_str, showWarnings = T)
+    str_file <- file.path(dir_str, paste0(names(gen)[x], ".str"))
+    edit_mainparams(gl = gen[[x]], name = names(gen)[x],
+      str_file = str_file, dir_str = dir_str)
+    edit_extraparams(gl = gen[[x]], name = names(gen)[x],
+      str_file = str_file, dir_str = dir_str, mode = mode)
+    if (class(gen[[x]]) == "genind"){
+      hierfstat::genind2hierfstat(gen[[x]]) %>%
+      dplyr::mutate(pop = as.factor(indNames(gen[[x]]))) %>%
+      hierfstat::write.struct(fname = str_file)
+      } else if (class(gen[[x]]) == "genlight") {
+      dartR::gl2structure(gen[[x]], outfile = str_file)
+    }
+  })
+}
+#create structure inputs for downsampling of dart
+create_str_input_subsets <- function(mode = c("normal", "K1")){
+1:length(s) %>%
+sapply(function(x){
+  int <- sample(1:adegenet::nLoc(pelo), s[x], replace = FALSE)
+  s_pelo <- pelo[, int]
+  if (mode == "K1") dirn <- "strK1_" else if (mode == "normal") dirn <- "str_"
+  dir_str <- file.path("data/intermediate", paste0(dirn, s[x]))
+  dir.create(dir_str, showWarnings = T)
+  str_file <- file.path(dir_str, paste0(s[x], ".str"))
+  edit_mainparams(gl = s_pelo, name = s[x],
+      str_file = str_file, dir_str = dir_str)
+  edit_extraparams(gl = s_pelo, name = s[x],
+      str_file = str_file, dir_str = dir_str, mode = mode)
+  dartR::gl2structure(s_pelo, outfile = str_file)
+  })
+}
+
+#notes:
+#warning dartR::gi2gl %>% gl2structure does not format format properly
+#structure files. But, hierfstat::write.struct has a bug so that it does not
+#print individual names in the ilab argument. I overcame this by modifiying the
+#dataframe with genotypes:

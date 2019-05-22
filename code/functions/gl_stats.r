@@ -18,13 +18,13 @@ geno_stats <- function(pattern = "dart", genlist, data = c("raw", "filt")){
     summary_metrics <- loci.stats(genlist[[i]]) #metrics per loci
     ind_miss_raw <- ind_miss(genlist[[i]]) #missingness per individual
       #plot individual missingness
-    pdf(file = paste0("data/intermediate/", data, "_", sp,
-    "_ind_missingness.pdf"), width = 6, height = 4)
-          plot(sort(ind_miss_raw),
-            main = paste0("Sorted per indiviudal missingness in ", data,
-            " data from ", sp),
-            ylab = "Proportion of missing loci")
-    dev.off()
+    # pdf(file = paste0("data/intermediate/", data, "_", sp,
+    # "_ind_missingness.pdf"), width = 6, height = 4)
+    #       plot(sort(ind_miss_raw),
+    #         main = paste0("Sorted per indiviudal missingness in ", data,
+    #         " data from ", sp),
+    #         ylab = "Proportion of missing loci")
+    # dev.off()
     list(genotypes = paste0(data, "_", sp), summary_metrics = summary_metrics,
       ind_miss_raw = ind_miss_raw)
     }

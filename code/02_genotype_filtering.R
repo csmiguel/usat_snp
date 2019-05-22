@@ -23,6 +23,7 @@ source("code/functions/gl_stats.r")
 source("code/functions/ind_miss.r")
 source("code/functions/remove_replica.r")
 source("code/functions/coverage_filt.r")
+source("code/parameters/gl_cleaning.r")
 
 input_path <- paste0("data/intermediate/raw_genotypes.rds")
 gen <- readRDS(file = input_path)
@@ -38,7 +39,7 @@ sink(file = "data/intermediate/filtering.log")
       #replica named 108541 from sample 106854.
 gen$dart_pelo <- remove_replica(gen = gen$dart_pelo, "108541", "106854")
   #filter SNPs
-source("code/parameters/gl_cleaning.r")
+
 gen_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
   {genfiltnames <<- names(gen)[.]; .} %>%
   seq_along() %>%
@@ -46,12 +47,21 @@ gen_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
     sp <- paste(names(gen)[[i]])
     cat(paste0("#log for ", sp), "\n")
     filt_gen <-
-    dartR::gl.filter.callrate(gen[[i]], method = "ind",
+    plot_missingness_individual(gen[[i]],
+      paste0("data/intermediate/Individual_missingness", sp)) %>%
+    dartR::gl.filter.callrate(method = "ind",
     threshold = 1 - ind_miss_thresh, v = 5) %>%
     dartR::gl.filter.repavg(repavg_threshold, v = 5) %>%
-  {coverage <<- diff_coverage(.); .} %>% .[, coverage <= cov_th]
-filt_gen@other$loc.metrics <- filt_gen@other$loc.metrics[coverage <= cov_th, ]
-filt_gen %>% dartR::gl.filter.callrate(method = "loc",
+    #allele balance: doi/full/10.1111/mec.14792 and 10.1111/1755-0998.12997
+    all_balance_filter(tresholds = balance_tresholds, include_plot = T,
+      plot_name = paste0("data/intermediate/Allele_balance_filt_", sp)) %>%
+    #filter on coverage: x deviations from the median
+    total_coverage_filtering(median_dev = max_coverage,
+      include_plot = T, lower_end = F,
+      plot_name = paste0("data/intermediate/Coverage_filtering", sp)) %>%
+      plot_missingness_locus(
+        paste0("data/intermediate/Locus_missingness", sp)) %>%
+    dartR::gl.filter.callrate(method = "loc",
       threshold = locus_callrate_threshold, v = 5, recalc = T) %>%
     dartR::gl.filter.secondaries(method = sec_method, v = 5) %>%
     dartR::gl.filter.maf(threshold = min_maf, v = 5) %>%
