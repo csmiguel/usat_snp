@@ -1,7 +1,14 @@
-#create map with the distribution of the samples and native distribution of the species
+plot_samples <- function(meta = metadata, name_plot){
+#meta is a metadata list where the name of each element has names of marker
+#and species. Each element is a sf object with #sample_id#locality#geometry
+#create map with the distribution of the samples and native
+#distribution of the species
 library(dplyr)
 library(sf)
 library(raster)
+assertthat::assert_that(seq_along(meta) %>% sapply(function(x){
+  names(meta[[x]]) == c("sample_id", "locality",  "geometry")
+  }) %>% all())
 #read raster and shape files
   #raster
 p_raster <- "data/raw/raster_iberian_peninsula.grd"
@@ -19,14 +26,11 @@ assertthat::assert_that(as.character(
 assertthat::assert_that(as.character(
   shp_pelo@data$BINOMIAL)[1] == "Pelobates cultripes")
 
-  #sample locations
-  p_meta <- "data/intermediate/metadata_all.rds"
-  meta <- readRDS(p_meta)
 #load functions
 source("code/functions/centroid_sf.r")
 
 #Plot distribution
-outfile <- paste0("data/final/map_samples.pdf")
+outfile <- name_plot
 ratio <- 2
 size <- 5
 x <- c("hyla", "pelo")
@@ -61,7 +65,7 @@ for (i in seq_along(x)){
        col = snp_col) #snps samples
   plot(sf::st_geometry(centroids_usat), add = T, pch = pch_usat, cex = 1,
        col = micro_col) #usats samples
-  title(y[i], font = 3)
+  title(y[i], font.main = 3, cex.main = 0.8)
   if (i == 1){
     legend("topleft", legend = c("Microsatellites", "SNPs"),
            pch = c(pch_usat, pch_snp), bty = "n", col = c(micro_col, snp_col))
@@ -79,3 +83,4 @@ for (i in seq_along(x)){
     cex = .2, pos = 3, offset = .2, col = snp_col, font = 2)
 }
 dev.off()
+}
