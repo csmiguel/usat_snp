@@ -40,7 +40,7 @@ sink(file = "data/intermediate/filtering.log")
 gen$dart_pelo <- remove_replica(gen = gen$dart_pelo, "108541", "106854")
   #filter SNPs
 
-gen_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
+dart_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
   {genfiltnames <<- names(gen)[.]; .} %>%
   seq_along() %>%
   lapply(function(i){
@@ -73,47 +73,12 @@ gen_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
   }
 )
 sink()
-names(gen_filt) <- genfiltnames
+names(dart_filt) <- genfiltnames
 
 #statistics on filtered genotypes
-filt_stats <- geno_stats(genlist = gen_filt, data = "filt")
+filt_stats <- geno_stats(genlist = dart_filt, data = "filt")
 
-######################
-#remove individuals from metadata that were filtered in genotypes
-  meta_path <- paste0("data/intermediate/metadata_dartseq.rds")
-  metadata_dartseq <- readRDS(file = meta_path)
-#assert_that all ids in genotypes are present in metadata
-    assertthat::assert_that(all(indNames(gen_filt$dart_hyla) %in%
-      metadata_dartseq$metadata_darthyla$sample_id))
-    assertthat::assert_that(all(indNames(gen_filt$dart_pelo) %in%
-      metadata_dartseq$metadata_dartpelo$sample_id))
-    assertthat::assert_that(
-    #assert_that all ids unique
-    list(indNames(gen_filt$dart_hyla), indNames(gen_filt$dart_pelo),
-            metadata_dartseq$metadata_dartpelo$sample_id,
-            metadata_dartseq$metadata_darthyla$sample_id) %>%
-      sapply(function(x) all(duplicated(x)) == F) %>% all()
-    )
-    #remove individuals from metadata
-metadata_dartseq$metadata_darthyla %<>%
-  filter(sample_id %in% indNames(gen_filt$dart_hyla))
-metadata_dartseq$metadata_dartpelo %<>%
-  filter(sample_id %in% indNames(gen_filt$dart_pelo))
-    #create list with metadata for all samples
-  metadata_dartseq[[3]] <- gen$usat_hyla@other
-  metadata_dartseq[[4]] <- gen$usat_pelo@other
-  names(metadata_dartseq)[c(3, 4)] <- c("usat_hyla", "usat_pelo")
-assertthat::assert_that(length(metadata_dartseq) == length(gen),
-  msg = "metadata_all has a different length than gen_filt")
-#####################
-#Raw data
-saveRDS(raw_stats, paste0("data/intermediate/raw_dartseq_stats.rds"))
-#Filtered data
-  #create objects:
-  for (i in which(!(names(gen) %in% names(gen_filt)))){
-    gen_filt[[i]] <- gen[[i]]
-    names(gen_filt)[i] <- names(gen)[i]
-  } #add usat genotypes to gen_filt object
-saveRDS(gen_filt, paste0("data/intermediate/filt_genotypes.rds"))
+#save
+saveRDS(dart_filt, paste0("data/intermediate/dart_filt.rds"))
 saveRDS(filt_stats, paste0("data/intermediate/filt_dartseq_stats.rds"))
-saveRDS(metadata_dartseq, "data/intermediate/metadata_all.rds")
+saveRDS(raw_stats, paste0("data/intermediate/raw_dartseq_stats.rds"))
