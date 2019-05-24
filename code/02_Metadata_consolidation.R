@@ -45,11 +45,10 @@ h <- usat_gen[[i]]$other
 usat_gen[[i]]$other <- list()
 usat_gen[[i]]@other$metadata <- h #be aware of only using @ but not $
 }
-rm(h, i)
-#rm(i, dart_meta)
+rm(h, i, dart_meta)
 #merge all genotypes objects:
 gen <- c(dart_gen, usat_gen)
-#rm(dart_gen, usat_gen)
+rm(dart_gen, usat_gen)
 
 #CONSOLIDATE metadata: removes samples in metadata non present in
 #indNames and reorders metadata$sample_id according to order in indNames
