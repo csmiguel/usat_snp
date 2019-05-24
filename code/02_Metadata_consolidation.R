@@ -34,7 +34,8 @@ source("code/functions/consolidate_metadata.r")
 
 #replace @other in genlight by metadata
 for (i in seq_along(dart_meta)){
-other(dart_gen[[i]])$loc.metrics <- NULL
+dart_gen[[i]]$other$loc.metrics <- NULL
+dart_gen[[i]]$other <- data.frame()
 dart_gen[[i]]@other <- dart_meta[[i]]
 }
 rm(i, dart_meta)
@@ -47,3 +48,5 @@ rm(dart_gen, usat_gen)
 for (i in seq_along(gen)){
   gen[[i]] <- consolidate_metadata(gen[[i]])
 }
+
+saveRDS(gen, "data/intermediate/gen_consolidated.rds")
