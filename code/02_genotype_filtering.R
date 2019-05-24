@@ -77,7 +77,10 @@ names(dart_filt) <- genfiltnames
 
 #statistics on filtered genotypes
 filt_stats <- geno_stats(genlist = dart_filt, data = "filt")
-
+#genlight to genind coversion. For consistency with Microsatellites.
+#time for conversion scales exponentially with size. ie 100 ind and 30k loci
+#is around  20 min.
+dart_filt %<>% lapply(dartR::gl2gi)
 #save
 saveRDS(dart_filt, paste0("data/intermediate/dart_filt.rds"))
 saveRDS(filt_stats, paste0("data/intermediate/filt_dartseq_stats.rds"))

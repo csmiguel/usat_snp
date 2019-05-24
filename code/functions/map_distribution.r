@@ -7,7 +7,7 @@ library(dplyr)
 library(sf)
 library(raster)
 assertthat::assert_that(seq_along(meta) %>% sapply(function(x){
-  names(meta[[x]]) == c("sample_id", "locality",  "geometry")
+  names(meta[[1]]@other) == c("sample_id", "locality",  "geometry")
   }) %>% all())
 #read raster and shape files
   #raster
@@ -46,14 +46,11 @@ for (i in seq_along(x)){
   usat <- 2
   dart <- 1
   #sf centroids usats
-  centroids_usat <- centroid_sf(meta[grepl(x[i], names(meta))][[usat]])
+  centroids_usat <- centroid_sf(
+    meta[[grep(paste0("usat.", x[i]), names(gen))]]@other)
   #sf centroids dart
-  centroids_dart <- centroid_sf(meta[grepl(x[i], names(meta))][[dart]])
-  #assert statements
-  assertthat::assert_that(grepl("usat",
-    names(meta[grepl(x[i], names(meta))][usat])))
-  assertthat::assert_that(grepl("dart",
-    names(meta[grepl(x[i], names(meta))][dart])))
+  centroids_dart <- centroid_sf(
+    meta[[grep(paste0("dart.", x[i]), names(gen))]]@other)
   #plot
   plot(mapr, maxpixels = 5000, #raster
        breaks = c(0, 500, 1000, 1500, 2000, 3500),
