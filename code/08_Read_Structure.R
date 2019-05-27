@@ -1,19 +1,10 @@
 library(ggplot2)
 #check convergence for all runs
 #dataset#k
-runs <- system("find data/final/ -name *stlog | grep -v usat", intern = T)#because usat failed
-#runs <- system("find data/final/ -name *stlog", intern = T)
-  p <- runs %>%
-    #plyr::aaply(1, function(x){
-    sapply(function(x){
-    dataset <- gsub("^.*run_(.*)/.*$","\\1",x) %>% as.character()
-    k <- gsub("^.*K([1-9]).*$", "\\1", x)
-    lk <- system(paste0("cat ", x, " | grep [0,5][0]:"), intern = T) %>%
-      .[-grep("--", .)] %>%
-      gsub("^.*(-\\d+).*$", "\\1", .) %>%
-      c(dataset, k, .)
-  }) %>% t %>% as.data.frame
-
+source("code/functions/read_lk_str.r")
+runs <- run("k1")
+p <- read_lk()
+lambda <- get_lambda()
   #change cols to numeric
   for (i in 2:ncol(p)){
     p[, i] <- as.numeric(as.character(p[, i]))
@@ -22,12 +13,12 @@ runs <- system("find data/final/ -name *stlog | grep -v usat", intern = T)#becau
   pcol <- nlevels(p$V1) %>% sqrt %>% floor()
   it <- ncol(p) - 2
 
-for (datset in 1:nlevels(p$V1)){
-  levelp <- levels(p$V1)[datset]
-  pd <- filter(p, V1 == levelp)
+for (datset in 1:nlevels(p$V1)){#for each dataset
+  levelp <- levels(p$V1)[datset] #name of dataset
+  pd <- filter(p, V1 == levelp)#filter dataset
   pdf(paste0("data/final/convergence", levelp, ".pdf"))
-  par(mfrow = c(3, 3))
-  for (k in 2:max(pd$V2)){
+  par(mfrow = n2mfrow(length(unique(pd$V2))))
+  for (k in min(pd$V2):max(pd$V2)){
     pdk <- filter(pd, V2 == k)
     y_lim <- range(pdk[, -c(1, 2)])
     plot(1, type = "n", xlim = c(1, it), ylim = y_lim,
@@ -67,14 +58,4 @@ ggplot(data = result, aes(x = k, y = rhat, color = id)) + geom_line()
 dev.off()
 write.csv(result, file = "data/final/rhat.csv")
 saveRDS(result, "data/intermediate/rhat.rds")
-#run clumpak
-
-#matrix correlation between:
-# samples from same locality
-# subsampled datasets:
-#y = variance between runs
-#x = k
-#run best k
-  #output table with bestk for all datasets
-#structure maps for all datasets for best K, or alternatively if
-#no best k, the choose K == 2
+saveRDS(lambda, "data/intermediate/lambda.rds")

@@ -79,6 +79,7 @@ seq_along(gen) %>%
 }
 #create structure inputs for downsampling of dart
 create_str_input_subsets <- function(mode = c("normal", "K1")){
+  pelo <- dartR::gi2gl(pelo)
 1:length(s) %>%
 sapply(function(x){
   int <- sample(1:adegenet::nLoc(pelo), s[x], replace = FALSE)
@@ -91,7 +92,13 @@ sapply(function(x){
       str_file = str_file, dir_str = dir_str)
   edit_extraparams(gl = s_pelo, name = s[x],
       str_file = str_file, dir_str = dir_str, mode = mode)
-  dartR::gl2structure(s_pelo, outfile = str_file)
+  if (class(s_pelo) == "genind"){
+    hierfstat::genind2hierfstat(s_pelo) %>%
+    dplyr::mutate(pop = as.factor(indNames(s_pelo))) %>%
+    hierfstat::write.struct(fname = str_file)
+    } else if (class(s_pelo) == "genlight") {
+    dartR::gl2structure(s_pelo, outfile = str_file)
+  }
   })
 }
 
