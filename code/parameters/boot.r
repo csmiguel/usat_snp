@@ -1,4 +1,4 @@
-nboot = 100 #number of bootstrap
+nboot = 500 #number of bootstrap
 tresh = .7 #treshold for coloring nodes
 #subsample sizes for pelobates dartseq data
 s <- c(25000, 20000, 15000, 10000, 5000, 3000, 1000, 500, 200)
