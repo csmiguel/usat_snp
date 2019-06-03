@@ -46,9 +46,10 @@ tr <- seq_along(gen) %>%
 #root trees
 tr_rooted <- midpoint_tr(tr)
 
-#get bootstrap
+#get bootstrap#the function internally assigns 0's to all NA values in
+#bootstrap calculations.
 bt <- get_bt(tr_rooted)
 
 #save trees (first tree is the real tree)
-saveRDS(tr, "data/intermediate/bt_trees.rds")
+saveRDS(tr_rooted, "data/intermediate/bt_trees.rds")
 saveRDS(bt, "data/intermediate/boot_support.rds") #bootstrap support

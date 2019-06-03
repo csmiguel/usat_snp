@@ -17,23 +17,29 @@
 #  DEPENDENCIES:
 ###.............................................................................
 library(adegenet)
-library(assertthat)
 library(dplyr)
 library(ape)
 
-input_path1 <- paste0("data/intermediate/bt_trees.rds")
-input_path2 <- paste0("data/intermediate/boot_support.rds")
+input_path1 <- "data/intermediate/bt_trees.rds"
+input_path2 <- "data/intermediate/boot_support.rds"
 tr <- readRDS(file = input_path1)
 bt <- readRDS(file = input_path2)
 
 source("code/functions/bs_analysis.r")
 source("code/parameters/boot.r")
 
-#plot bs analisis
-for (m in 1:3){
-pdf(file = paste0("data/intermediate/bs_analysis_mode", m, ".pdf"),
- height = 8, width = 10)
-par(mfrow = c(2, 2))
-for (p in 1:length(tr)) bs_analysis(tr[p], bt[[p]], mode = m)
-dev.off()
-}
+bs_treemetrics <-
+  seq_along(tr) %>%
+    lapply(function(x) tree_metrics(tr[[x]], bt[[x]]))
+names(bs_treemetrics) <- names(tr)
+
+saveRDS(bs_treemetrics, "data/intermediate/bs_treemetrics.rds")
+  #statistics
+  dnnmin.glm <- summary(glm(bs~dnnmin, family = binomial()))
+    dnnmin.glm.e <- dnnmin.glm$coefficients[2, 1] %>% round(3)
+    dnnmin.glm.s <- dnnmin.glm$coefficients[2, 4] %>%
+      formatC(format = "e", digits = 2)
+  dno.glm <- summary(glm(bs~dno, family = binomial()))
+    dno.glm.e <- dno.glm$coefficients[2, 1] %>% round(3)
+    dno.glm.s <- dno.glm$coefficients[2, 4] %>%
+      formatC(format = "e", digits = 2)

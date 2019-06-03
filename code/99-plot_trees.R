@@ -6,7 +6,7 @@ tr <- readRDS("data/intermediate/bt_trees.rds")
 for (i in seq_along(names(bt))){
   nodecol[[i]][nodecol[[i]] < tresh * nboot] <- "red"#color nodes bt BS
   nodecol[[i]][nodecol[[i]] != "red"] <- "black"
-  pdf(file = paste0("data/intermediate/", names(bt)[[i]], "bs_tree.pdf"))
+  pdf(file = paste0("data/final/", names(bt)[[i]], "bs_tree.pdf"))
   plot(tr[[i]][[1]], "u", #plot fan
        use.edge.length = T,
        show.tip.label = T, cex = 0.4,

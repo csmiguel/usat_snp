@@ -70,6 +70,7 @@ get_bt <- function(list_tr){
         ans <- ape::countBipartitions(phy, list_tr[[x]][-1])
         ans <- c(nboot, ans[order(phy$edge[ints, 2])])
       }
+      ans[is.na(ans)] <- 0
       temp[[1]] <- ans
       temp
     })
