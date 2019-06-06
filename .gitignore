@@ -8,6 +8,7 @@
 *.pdf
 .Rhistory
 .Rapp.history
+.RData
 data/intermediate
 etc
 data/final

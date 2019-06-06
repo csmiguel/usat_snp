@@ -1,11 +1,14 @@
-#Add bootstrap values from ape prop.clades to treeman object
+#Add bootstrap values from ape prop.clades to treeman object. It checks
+# partitions in tree to make sure the order or bootstrap suppor values is right.
 add_bs2tm <- function(tr, bs, tm){
   #tr is a phylo tree used to get the support values. it should be the reference
   # rooted tree over which prop.claes are calculated.
   #bs is a vector with bootstrap support values calculated with function
   # ape::prop.par
   #tm is a treeman object obtained from as(tr, "TreeMan")
-  #-> the function finds matches between the clades in the treeman tree and the partitions in a phylo tree based on tip names. It then adds a slot in the treeman object with bootstrap support values.
+  #-> the function finds matches between the clades in the treeman tree and the
+  # partitions in a phylo tree based on tip names. It then adds a slot in the
+  # treeman object with bootstrap support values.
   assertthat::assert_that(length(bs) == tr$Nnode)
   assertthat::assert_that(all(tm@tips %in% tr$tip.label))
   assertthat::assert_that(ape::is.rooted(tr))
