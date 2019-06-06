@@ -3,12 +3,11 @@ library(ggplot2)
 #dataset#k
 source("code/functions/read_lk_str.r")
 runs <- run("k1")
-p <- read_lk()
+#read all log files into a dataframe with:#rowname, path of file#dataset,
+#dataset#k, k# columns with names being the interation and value being the lnlk.
+p <- read_lk(runs = runs)
+# get lambda
 lambda <- get_lambda()
-  #change cols to numeric
-  for (i in 2:ncol(p)){
-    p[, i] <- as.numeric(as.character(p[, i]))
-  }; rm(i)
 
   pcol <- nlevels(p$V1) %>% sqrt %>% floor()
   it <- ncol(p) - 2
