@@ -4,7 +4,7 @@
 # https://scholar.google.co.uk/citations?user=1M02-S4AAAAJ&hl=en
 # April 2019
 ###.............................................................................
-#GOAL: calculate best K
+#GOAL: run kfinder for all runs
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 #  REQUIRED FILES:
@@ -25,7 +25,7 @@ runs %>%
     #create parameter file
     param <- c(sprintf('"%s"', file.path(getwd(), x)),
                sprintf('"%s"', "str*"),
-               2, #from K
+               1, #from K
                8, #to K
                readLines(file.path(x, "K2_rep1.stlog")) %>%
                  grep(pattern = " individuals$", value = T) %>%
