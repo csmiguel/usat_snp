@@ -137,7 +137,5 @@ gen %<>% lapply(function(x){
   x
   })
 
-#Plot samples post filtered pop
-plot_samples(meta = gen,
-  name_plot = "data/intermediate/sample_postfilt_distribution.pdf")
+#Save object
 saveRDS(gen, "data/intermediate/gen_consolidated_filtered.rds")

@@ -1,8 +1,11 @@
-plot_samples <- function(meta = metadata, name_plot){
+plot_samples <- function(meta = metadata, name_plot, res = res,
+  mode = c(1, 2)){
 #meta is a metadata list where the name of each element has names of marker
 #and species. Each element is a sf object with #sample_id#locality#geometry
 #create map with the distribution of the samples and native
 #distribution of the species
+#res, resolution of raster. For fast plotting use 5.10^3. For high-res 5.10^4
+#mode is 1 for test mode and 2 for pretty plotting
 library(dplyr)
 library(sf)
 library(raster)
@@ -50,10 +53,10 @@ for (i in seq_along(x)){
   centroids_dart <- centroid_sf(
     meta[[grep(paste0("dart.", x[i]), names(gen))]]@other$metadata)
   #plot
-  plot(mapr, maxpixels = 5000, #raster
+  plot(mapr, maxpixels = res, #raster
        breaks = c(0, 500, 1000, 1500, 2000, 3500),
        col = gray.colors(5, start = 0.9, end = 0.3),
-       axes = T, box = FALSE)
+       axes = T, box = FALSE, ylab = "Latitude", xlab = "Longitude")
   plot(get(ls()[grepl(paste0("shp_", x[i]), ls())]),  #IUCN distribution
        add = T, border = "black", col = grey(0.5, alpha = 0.3))
   plot(sf::st_geometry(centroids_dart), add = T, pch = pch_snp, cex = 1.4,
@@ -62,8 +65,9 @@ for (i in seq_along(x)){
        col = micro_col) #usats samples
   title(y[i], font.main = 3, cex.main = 0.8)
   if (i == 1){
-    legend("topleft", legend = c("Microsatellites", "SNPs"),
-           pch = c(pch_usat, pch_snp), bty = "n", col = c(micro_col, snp_col))
+    legend(y = extent(mapr)@ymax, x = extent(mapr)@xmin,
+      legend = c("Microsatellites", "SNPs"), cex = 0.7,
+      pch = c(pch_usat, pch_snp), bty = "n", col = c(micro_col, snp_col))
   }
   off <- 0.5
   pop_usat <- centroids_usat %>% sfc_as_cols %>%
@@ -72,10 +76,16 @@ for (i in seq_along(x)){
   pop_dart <- centroids_dart %>% sfc_as_cols %>%
     mutate(longitude = as.numeric(longitude)) %>%
     mutate(latitude = as.numeric(latitude))
+    if (mode == 1){
   text(pop_usat$longitude, y = pop_usat$latitude, labels = pop_usat$locality,
     cex = .2, pos = 1, offset = .2, col = micro_col, font = 2)
   text(pop_dart$longitude, y = pop_dart$latitude, labels = pop_dart$locality,
     cex = .2, pos = 3, offset = .2, col = snp_col, font = 2)
+  }
+  if (mode == 2){
+    text(pop_usat$longitude, y = pop_usat$latitude, labels = pop_usat$locality,
+      cex = .3, pos = 1, offset = .3, col = "black", font = 2)
+  }
 }
 dev.off()
 }
