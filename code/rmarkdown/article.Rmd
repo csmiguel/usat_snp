@@ -6,15 +6,8 @@ author: |
   | Correspondence should be addressed to miguelcamachosachez@gmail.com
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  rmarkdown::pdf_document:
-    toc: false
-    keep_tex: true
-    fig_caption: yes
-    includes:
-      in_header: preamble.tex
-fontsize: 11pt
-documentclass: article
-subparagraph: true
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r, include = FALSE}
