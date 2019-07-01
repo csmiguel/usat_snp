@@ -19,7 +19,7 @@ for i in data/intermediate/str_*
 do
 d=$(echo $i | sed 's/^.*str_/data\/final\/run_/1')
 mkdir $d
-~/.local/bin/structure_threader run -Klist 2 3 4 5 6 7 8 -R 5 \
+~/.local/bin/structure_threader run -K 8 -R 10 \
 -i $i/*.str \
 -o $d \
 -t 8 \

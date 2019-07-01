@@ -16,3 +16,9 @@ fontsize: 11pt
 documentclass: article
 subparagraph: true
 ---
+Table S1: samples
+Figure S1: SNP filtering for *H. molleri* (A, C, E, G) and *P. cultripes* (B, D, F, H). En each panel we show the frequency distribution (y-axes) of the metric evaluated (x-axes), with the thresholds applied (dashed vertical lines).
+
+Figures 2.1 - 2.11: Change of the likelihood of the data across iterations for 10 replicate runs for K = 1 to K = 10. The vertical dashed lines indicate burnin length.
+
+Figures S3.1 - S3.2: Gelman and Rubin's convergence diagnostic for SNP (S3.1) and microtellite (S3.2) datasets.

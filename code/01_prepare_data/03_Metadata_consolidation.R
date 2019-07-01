@@ -5,8 +5,7 @@
 # April 2019
 ###.............................................................................
 #GOAL: consolidation of metadata
-#the most.
-#DESCRIPTION:
+#DESCRIPTION: make metadata consitent with indNames
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 #  REQUIRED FILES:
@@ -50,7 +49,7 @@ rm(h, i, dart_meta)
 gen <- c(dart_gen, usat_gen)
 rm(dart_gen, usat_gen)
 
-#CONSOLIDATE metadata: removes samples in metadata non present in
+#CONSOLIDATE metadata: removes samples in metadata not present in
 #indNames and reorders metadata$sample_id according to order in indNames
 for (i in seq_along(gen)){
   gen[[i]] <- consolidate_metadata(gen[[i]])

@@ -9,6 +9,8 @@ r <- system("find data/final/run_* -name *stlog",
 r
 }
 
+#read log files into a dataframe with:#rowname, path of file#dataset,
+#dataset#k, k# columns with names being the interation and value being the lnlk.
 read_lk <- function(runs = runs){
   p <- runs %>%
     sapply(function(x){
@@ -74,6 +76,7 @@ p = NULL, burnin = NULL){
 }
 
 
+#calculate Gelman and Rubin's convergence diagnostic
 rhat <- function(p = NULL, burnin = NULL){
   it <- as.numeric(names(p)[3:length(names(p))])
   thinning_number <- it[2] - it[1] #frequency of saving steps

@@ -15,6 +15,7 @@
 #    Outpath:
 #  DEPENDENCIES:
 ###.............................................................................
+library(dplyr)
 source("code/functions/read_lk_str.r")
 source("code/parameters/structure.r")
 
