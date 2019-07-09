@@ -8,7 +8,7 @@
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 library(ggplot2)
-
+best_files <- readRDS("data/intermediate/best_files_kfinder.rds")
 #read structure output
 h <- pophelper::readQStructure(best_files[1], indlabfromfile = T)
 
