@@ -1,4 +1,4 @@
-tree_metrics <- function(tr, bs){
+tree_metrics <- function(tr, bs, external_ref_tree = NULL){
   #tr is a multiphylo object
   #bs is a vector with bootstrap supports
   #returns a data frame with
@@ -9,8 +9,12 @@ tree_metrics <- function(tr, bs){
   require(gridExtra)
   library(treeman)
   source("code/functions/add_bs2tm.r")
-  #
-  tr1 <- tr[1][[1]]#reference tree
+
+  if (!is.null(external_ref_tree)){
+    tr1 <- external_ref_tree
+    } else {
+      tr1 <- tr[1][[1]]
+      }#reference tree
   bs <- bs / nboot #vector with bs values normalized to 1
   #Normalize length of the tree
   # distance between all nodes (also tips) in the tree

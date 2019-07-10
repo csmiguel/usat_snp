@@ -52,8 +52,18 @@ midpoint_tr <- function(list_mp){
 }
 
 #get bootstrap value for nodes for rooted or unrooted trees
-get_bt <- function(list_tr){
+get_bt <- function(list_tr, external_ref_tree = NULL){
   #list_tr is a list of multiphylo objects
+  h <- names(list_tr)
+  if (!is.null(external_ref_tree)){
+    assertthat::assert_that(
+      ape::Ntip(external_ref_tree) == ape::Ntip(list_tr[[1]][1]))
+    list_tr <-
+      seq_along(list_tr) %>%
+      lapply(function(x){
+        c(external_ref_tree, list_tr[[x]])
+      })
+    }
   bt <-
     seq_along(list_tr) %>%
     sapply(function(x){
@@ -63,7 +73,7 @@ get_bt <- function(list_tr){
         pp <- ape::prop.part(list_tr[[x]][-1])
         ans <- ape::prop.clades(list_tr[[x]][[1]], part = pp, rooted = T)
       }
-      #1. for unrooted trees
+      #2. for unrooted trees
       if (all(!sapply(list_tr, ape::is.rooted))){
         phy <- reorder(list_tr[[x]][[1]], "postorder")
         ints <- phy$edge[, 2] > ape::Ntip(phy)
@@ -74,6 +84,6 @@ get_bt <- function(list_tr){
       temp[[1]] <- ans
       temp
     })
-    names(bt) <- names(list_tr)
+    names(bt) <- h
     bt
   }

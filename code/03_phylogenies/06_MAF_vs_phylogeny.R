@@ -8,28 +8,25 @@
 #DESCRIPTION:
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
-
 library(adegenet)
 library(dplyr)
 library(ape)
+library(dartR)
 
-input_path1 <- "data/intermediate/bt_trees.rds"
-input_path2 <- "data/intermediate/boot_support.rds"
-tr <- readRDS(file = input_path1)
-bt <- readRDS(file = input_path2)
+input_path <- "data/intermediate/gen_consolidated_filtered.rds"
+gen <- readRDS(file = input_path)
 
-source("code/functions/bs_analysis.r")
 source("code/parameters/boot.r")
 
-#get list of dataframes with columns being:
-# dnr, distance from node to root
-# dnp, distance from node to parent node
-# bs_tm, bootstrap support
-#and rows being nodes.
+#convert from genind to genlight
+pelo <- gen[["dart_pelo"]] %>%
+  dartR::gi2gl
 
-bs_treemetrics <-
-  seq_along(tr) %>%
-    lapply(function(x) tree_metrics(tr[[x]], bt[[x]]))
-names(bs_treemetrics) <- names(tr)
+#filter pelobates genotypes accross MAF thresholds
+pelo_maf <-
+  seq_along(maf) %>%
+    lapply(function(x){
+      dartR::gl.filter.maf(pelo, threshold = maf[x], v = 5)
+      })
 
-saveRDS(bs_treemetrics, "data/intermediate/bs_treemetrics.rds")
+names(pelo_maf) <- as.character(maf)

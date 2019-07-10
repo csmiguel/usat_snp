@@ -20,3 +20,15 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, dev = "png
 ```{r, fig.height = 4.5, fig.width = 4.5, fig.cap = "Populations sampled in *Hyla molleri* (panel A) and *Pelobates cultripes* (panel B), for microsatellite (triangles) and SNP (circles). Coordinates and samples codes are in Table 1. The distribution for each species is indicated in shaded area, downloaded from the IUCN on May 2019 (*H. molleri* was described recently and its distribution is not availabe at the IUCN database. We used the distribution of *H. arborea* instead)"}
 
 ```
+##Figure 2:
+
+Assessment of optimal K values using (A-C) Pr[X|K] (Pritchard et al. 2000), (D-F) ΔK (Evanno et al. 2005) and (G-I) the parsimony index, PI (Wang 2019), from K = 1 to K = 8, for *H. molleri* (A, D, G), *P. cultripes* (B, E, H) and their subsampled datasets from n loci (n in 200, 500, 1000, 3000, 5000, 10000, 20000) (C, F, I). Panels A, B, D, E, G and H, depict results from SNP (red) and microsatellite (green) data, whereas panels C, F and I, depict results from SNP data alone.??I need to overplot SDs, change the line and pch pattern for usat/snp and color palette for subsets??
+
+
+##Figure 3
+
+Relation of bootstrap support to Dnr (distance from node to root) and Dnp (distance from node to parent node), for SNP (A, B, E, F) and microtellite (C, D, G, H) data from *H. molleri* (A, C, E, G) and *P. cultripes* (B, D, F, H).??should I overplot here the results from loci subsampling??
+
+##Figure 4
+
+Rooted neighbor joining trees for SNP (A, B) and microtellite (C-D) datasets from *H. molleri* (A, C) and *P. cultripes* (B, D). Nodes with bootstrap support above 0.70 are represented with black diamonds, or else with red dots. In each tip, pie chart depicts the ancestry proportions from CLUMPAK consensus solutions for the major cluster for K = 4 together with the population ID from Table 1.
