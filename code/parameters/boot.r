@@ -6,3 +6,5 @@ s <- c(20000, 10000, 5000, 3000, 1000, 500, 200)
 n_sampling_replicas <- 5
 #maf thresholds
 maf <- seq(0.04, 0.1, 0.02)
+#maf sample size
+mafss <- 500
