@@ -32,3 +32,13 @@ Relation of bootstrap support to Dnr (distance from node to root) and Dnp (dista
 ##Figure 4
 
 Rooted neighbor joining trees for SNP (A, B) and microtellite (C-D) datasets from *H. molleri* (A, C) and *P. cultripes* (B, D). Nodes with bootstrap support above 0.70 are represented with black diamonds, or else with red dots. In each tip, pie chart depicts the ancestry proportions from CLUMPAK consensus solutions for the major cluster for K = 4 together with the population ID from Table 1.
+
+##Figure 5
+
+??*to decide between top or bottom panel*??
+*Top*. Median (horizontal lines) and 25% and 75% quantiles (grey boxes) of the bootstrap support for all nodes in the tree (top panel) from the original datasets and from the subsampled loci. *Bottom*. Bootstrap support for trees from subsampled SNPs from *P. cultripes* (blue dots) and fitted values (solid line) from a linear model on the natural logarithm of the number of loci (R^2 = 0.34; p-value = < 0.001).
+
+##Figure 6
+
+??why are there transparent pies on K8. check code and export as bitmap??
+Spatial distribution of localities sampled with pies representing averaged proportion of inferred ancestries from K = 2 to K = 8, for SNP and microsatellite data, in STRUCTURE. The shaded area represent the distributions of *H. molleri* and *P. cultripes*.

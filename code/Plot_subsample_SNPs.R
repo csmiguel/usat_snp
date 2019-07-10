@@ -88,3 +88,20 @@ axis(1, at = seq_along(levels(s_bt_m$dataset)), labels = lab,
 axis(2, at = seq(0, 1, 0.2), labels = seq(0, 1, 0.2), las = 1, cex.axis = 0.8)
 abline(v = length(bstree) - 0.5, lty = 2, lwd = 2)
 dev.off()
+
+#3. Point plot linear model
+meanbs <- sapply(bstree, function(x) mean(x$bs_tm))
+h <- s_bt_m %>% filter(!grepl("^[a-z]", dataset))
+# model
+m1 <- lm(value ~ log(as.numeric(as.character(dataset))), data = h)
+summary(m1)
+pr <- predict(m1, newdata = data.frame(dataset = seq(100, 33000, 1)))
+
+pdf(file = "data/final/no_loci_model.pdf", height = 4.5, width = 6)
+plot(pr,
+     ylab = "Bootstrap support",
+     xlab = "Number of loci", las = 1, type = "l", ylim = c(0, 1))
+points(jitter(as.numeric(as.character(h$dataset))),
+       h$value,
+       col = adjustcolor("blue", alpha.f = 0.2), pch = 20)
+dev.off()

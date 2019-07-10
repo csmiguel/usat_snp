@@ -59,3 +59,21 @@ boxplot(s_bt_m$value~s_bt_m$dataset, xlab = "MAF threshold",
         pch = 20, outcol = grey(0.7))
 
 dev.off()
+
+#3. Point plot linear model
+h <- s_bt_m
+# model
+m1 <- lm(value ~ as.numeric(as.character(dataset)), data = h)
+summary(m1)
+pr <- predict(m1,
+  newdata = data.frame(dataset = seq(0, 0.1, length.out = 1000)))
+
+pdf(file = "data/final/maf_model.pdf", height = 4.5, width = 6)
+plot(seq(0, 0.1, length.out = 1000),
+     pr,
+     ylab = "Bootstrap support",
+     xlab = "MAF", las = 1, type = "l", ylim = c(0, 1))
+points(jitter(as.numeric(as.character(h$dataset))),
+       h$value,
+       col = adjustcolor("blue", alpha.f = 0.2), pch = 20)
+dev.off()
