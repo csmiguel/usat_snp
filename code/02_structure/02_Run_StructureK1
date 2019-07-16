@@ -5,7 +5,7 @@
 #https://web.stanford.edu/group/pritchardlab/home.html
 
 ###  Warning ######
-# This is not run locally but on the cluster. So pipe is broken here.
+# This is not run locally but on the server. So pipe is broken here.
 # 1. create folder structure in server if not already done before.
 # mkdir data; mkdir data/final; mkdir data/intermediate
 # 2. copy files from local to server:
