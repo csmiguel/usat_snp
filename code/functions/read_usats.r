@@ -103,6 +103,11 @@ read_Hyla_molleri <- function() {
        dplyr::rename(sample_id = V1, locality = V2)
        g[["sample_id"]] <- gsub(pattern = "^.*#", #m
                       replacement = "", g[["sample_id"]]) #m
+  #replace museum codes with collector codes
+  g$sample_id %<>%
+    gsub(pattern = "MNCN11068", replacement = "HaGa1") %>%
+    gsub(pattern = "MNCN11078", replacement = "HaMj1") %>%
+    gsub(pattern = "MNCN11086", replacement = "HaT3")
 
   s <- read.table("data/raw/table-1-data.csv",
               header = TRUE, sep = ",", stringsAsFactors = FALSE) %>%

@@ -21,7 +21,6 @@ library(magrittr)
 
 source("code/functions/gl_stats.r")
 source("code/functions/ind_miss.r")
-source("code/functions/remove_replica.r")
 source("code/functions/coverage_filt.r")
 source("code/parameters/gl_cleaning.r")
 
@@ -34,11 +33,8 @@ raw_stats <- geno_stats(genlist = gen, data = "raw")
 ##################
 #Filtering
 sink(file = "data/intermediate/filtering.log")
-  #remove replica from Pelobates:
-      #for Pelobates Ana included a blind
-      #replica named 108541 from sample 106854.
-gen$dart_pelo <- remove_replica(gen = gen$dart_pelo, "108541", "106854")
-  #filter SNPs
+
+#filter SNPs
 
 dart_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
   {genfiltnames <<- names(gen)[.]; .} %>%

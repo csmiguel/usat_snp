@@ -26,13 +26,13 @@ source("code/functions/map_distribution.r")
 
 #Plot samples in map so as to decide which populations to keep
 plot_samples(meta = gen,
-  name_plot = "data/intermediate/pre_sample_fil_distribution.pdf")
+  name_plot = "data/intermediate/pre_sample_fil_distribution.pdf", res = 5000)
 #Create list with populations to remove
 #based on plotting samples on a map, I removed the following populations
 usat_hyla_remove_pop <- c("Segonnes", "Larués", "Renales", "Torrecaballeros",
-  "Valdemanco", "Colmenar Viejo", "Peñalara", "Albires", "Río Montoro",
+  "Valdemanco", "Colmenar Viejo", "Peñalara", "Río Montoro",
   "Albires", "Serra de Montejunto", "Mindelo", "El Puerto", "Valdeazores",
-  "Valle de Santiago", "Boticas", "Fuenterrebollo")
+  "Valle de Santiago", "Boticas", "Fuenterrebollo", "Ciudad Rodrigo")
 dart_hyla_remove_pop <- c() #none filtered
 usat_pelo_remove_pop <- c("Valflaunes", "Valdunciel", "Porto Covo",
   "Cabezarrubias del Puerto")
@@ -76,12 +76,12 @@ gen$usat_hyla$other$metadata$locality <-
   gsub("Castelo de Vide", "Beira", gen$usat_hyla$other$metadata$locality)
 # merge populations
 #  1
-gen$dart_hyla$other$metadata$locality %<>%
-  gsub(pattern = "Peña de Francia",
-    replacement = "Peña de Francia - Ciudad Rodrigo")
-gen$usat_hyla$other$metadata$locality %<>%
-  gsub(pattern = "Ciudad Rodrigo",
-    replacement = "Peña de Francia - Ciudad Rodrigo")
+# gen$dart_hyla$other$metadata$locality %<>%
+#   gsub(pattern = "Peña de Francia",
+#     replacement = "Peña de Francia - Ciudad Rodrigo")
+# gen$usat_hyla$other$metadata$locality %<>%
+#   gsub(pattern = "Ciudad Rodrigo",
+#     replacement = "Peña de Francia - Ciudad Rodrigo")
 #   2
 gen$dart_hyla$other$metadata$locality %<>%
   gsub(pattern = "Saceruela|Río Esteras",
@@ -136,6 +136,7 @@ gen %<>% lapply(function(x){
     as.character(pop(x))))
   x
   })
-
+plot_samples(meta = gen,
+  name_plot = "data/intermediate/post_sample_fil_distribution.pdf", res = 5000)
 #Save object
 saveRDS(gen, "data/intermediate/gen_consolidated_filtered.rds")

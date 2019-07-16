@@ -34,14 +34,16 @@ assertthat::assert_that(!is.null(c(m[["dartseqID"]],
 }
 
 metadata_Dartseq_Pelobates <- function(x){
-  f <- "data/raw/2019-01-03_meta_Pelobates.csv"
-  m <- read.csv(f)
-  m %<>% mutate(locality = gsub(pattern = ",.*$", replacement = "", site)) %>%
+  f <- "data/raw/meta_pelobates.csv"
+  m <- read.delim(f, sep = ";")
+  m %<>%
+    mutate(locality = gsub(pattern = ",.*$", replacement = "", site)) %>%
+    mutate(collector = gsub(pattern = " ", replacement = "", collector)) %>%
     rename(full_locality = site) %>%
     rename(dartseqID = vaucher) %>%
     rename(latitude = lat) %>%
     rename(longitude = lon) %>% dplyr::as_tibble() %>%
-    {sp::SpatialPointsDataFrame(data = .[, c(1, 6), drop = FALSE],
+    {sp::SpatialPointsDataFrame(data = .[, c(1, 6, 7), drop = FALSE],
                                 coords = .[, c("longitude", "latitude")])} %>%
     as("sf") %>%
     sf::st_set_crs(4326)
@@ -52,12 +54,20 @@ metadata_Dartseq_Pelobates <- function(x){
   assertthat::assert_that(all(g_dartseq_id %in% m_darseq_id), msg =
   "some names in genotypes are missing in metadata")
   #fix pop names
-  assertthat::assert_that(!is.null(c(m[["dartseqID"]], m[["locality"]])))
+  assertthat::assert_that(!is.null(c(m[["collector"]], m[["locality"]])))
+
   pop(x$pelo) <- sapply(g_dartseq_id, function(x){
     which(m[["dartseqID"]] == x) %>% m[["locality"]][.]
   }) %>% unlist()
+
+  indNames(x$pelo) <- sapply(g_dartseq_id, function(x){
+    which(m[["dartseqID"]] == x) %>% m[["collector"]][.]
+  }) %>% unlist()
+
+  attr(x = pop(x$pelo), "names") <- indNames(x$pelo)
+  m %<>% dplyr::select(-dartseqID)
   metadata_dartpelo <<- m %>% #select only samples present in the genlight object
-                filter(dartseqID %in% adegenet::indNames(x$pelo)) %>%
-                rename(sample_id = dartseqID)
+                filter(collector %in% adegenet::indNames(x$pelo)) %>%
+                rename(sample_id = collector)
   return(x)
 }

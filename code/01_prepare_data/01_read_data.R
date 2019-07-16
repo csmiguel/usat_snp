@@ -19,16 +19,22 @@
 
 library(dartR)
 library(dplyr)
+library(magrittr)
 
 #1. DArTseq
 #path to singlerow dartseq SNPs genotypes
 path_2_genotypes <- c(
-  "data/raw/Report_DHyl17-2984_1_moreOrders_SNP_singlerow_2.csv",
+  "data/raw/Report_DHyl17-2984_SNP_mapping_2.csv",
   "data/raw/Report_DPelo19-4013_SNP_mapping_2.csv")
 
 #read singlerow dartseq file into genlight object.
 gen_dart <- lapply(path_2_genotypes, dartR::gl.read.dart)
 names(gen_dart) <- c("hyla", "pelo")
+
+#remove replica from Pelobates:
+    #for Pelobates Ana included a blind
+    #replica named 108541 from sample 106854.
+gen_dart$pelo <- gl.drop.ind(gen_dart$pelo, "108541")
 #read metadata
 source("code/functions/read_metadata.r")
 gen_dart %<>% metadata_Dartseq_Hyla() %>% metadata_Dartseq_Pelobates()

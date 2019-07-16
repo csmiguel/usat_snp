@@ -11,7 +11,7 @@
 
 #   1.2 SNPs (Dartseq 1 singlerow)
         #hyla#
-            Report_DHyl17-2984_1_moreOrders_SNP_singlerow_2.csv
+            Report_DHyl17-2984_SNP_mapping_2.csv
         #pelobates#
             Report_DPelo19-4013_SNP_mapping_2.csv
 
@@ -28,8 +28,8 @@
         - from different sources compiled by me.
         metadata_hyla_dartseq.xlsx
         #pelobates#
-        - created by Adam (see email 3 January 2019)
-        2019-01-03_meta_Pelobates.csv
+        - created by Adam (see email 3 January 2019) and Miguel after Iñigo's email from 17 July 2019.
+        meta_pelobates.csv
 
 
 
