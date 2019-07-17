@@ -42,6 +42,7 @@ micro_col <- "blue"
 snp_col <- "red"
 pch_snp <- 20
 pch_usat <- 2
+cex_pt <- c(1, 1.4)
 
 pdf(outfile, width = size * ratio, height = size)
 par(mfrow = c(1, 2))
@@ -59,14 +60,14 @@ for (i in seq_along(x)){
        axes = T, box = FALSE, ylab = "Latitude", xlab = "Longitude")
   plot(get(ls()[grepl(paste0("shp_", x[i]), ls())]),  #IUCN distribution
        add = T, border = "black", col = grey(0.5, alpha = 0.3))
-  plot(sf::st_geometry(centroids_dart), add = T, pch = pch_snp, cex = 1.4,
+  plot(sf::st_geometry(centroids_dart), add = T, pch = pch_snp, cex = cex_pt[2],
        col = snp_col) #snps samples
-  plot(sf::st_geometry(centroids_usat), add = T, pch = pch_usat, cex = 1,
+  plot(sf::st_geometry(centroids_usat), add = T, pch = pch_usat, cex = cex_pt[1],
        col = micro_col) #usats samples
   title(y[i], font.main = 3, cex.main = 0.8)
   if (i == 1){
     legend(y = extent(mapr)@ymax, x = extent(mapr)@xmin,
-      legend = c("Microsatellites", "SNPs"), cex = 0.7,
+      legend = c("Microsatellites", "SNPs"), pt.cex = cex_pt, cex = 0.7,
       pch = c(pch_usat, pch_snp), bty = "n", col = c(micro_col, snp_col))
   }
   off <- 0.5
