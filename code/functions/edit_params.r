@@ -34,7 +34,7 @@ edit_mainparams <- function(gl = gl, name = name,
 
 #create extraparams file for structure input
 edit_extraparams <- function(gl = gl, name = name,
-  str_file = str_file, dir_str = dir_str, mode = mode){
+  str_file = str_file, dir_str = dir_str, mode = mode, lambdapar = lambdapar){
   param <- readLines("data/raw/extraparams")
   hh <- grep("#define UPDATEFREQ ", param)
   if (grepl("dart*", name) | is.numeric(name)){
@@ -49,6 +49,10 @@ edit_extraparams <- function(gl = gl, name = name,
   } else if (mode == "normal"){
     param[hh] <- sub("xx", 0, param[hh])
   }
+  hh <- grep("#define LAMBDA ", param)
+  if (mode == "normal"){
+    param[hh] <- sub("1", lambdapar, param[hh])
+  }
   assertthat::assert_that(all(grepl("xx", param) == F),
     msg = "wrong replacement in extraparams file")
   mainparams_path <- file.path(dir_str, "extraparams")
@@ -61,13 +65,21 @@ create_str_input <- function(mode = c("normal", "K1")){
 seq_along(gen) %>%
   sapply(function(x){
     if (mode == "K1") dirn <- "strK1_" else if (mode == "normal") dirn <- "str_"
+    #determine lambda
+    assertthat::assert_that(!is.null(lambda))
+    if (grepl("usat", names(gen)[x])){
+      l <- 1
+      } else if (grepl("dart", names(gen)[x])){
+        l <- lambda[grepl(names(gen)[x], lambda$dataset), 2]
+      }
+    #end determine lambda
     dir_str <- file.path("data/intermediate", paste0(dirn, names(gen)[x]))
     dir.create(dir_str, showWarnings = T)
     str_file <- file.path(dir_str, paste0(names(gen)[x], ".str"))
     edit_mainparams(gl = gen[[x]], name = names(gen)[x],
       str_file = str_file, dir_str = dir_str)
     edit_extraparams(gl = gen[[x]], name = names(gen)[x],
-      str_file = str_file, dir_str = dir_str, mode = mode)
+      str_file = str_file, dir_str = dir_str, mode = mode, lambdapar = l)
     if (class(gen[[x]]) == "genind"){
       hierfstat::genind2hierfstat(gen[[x]]) %>%
       dplyr::mutate(pop = as.factor(indNames(gen[[x]]))) %>%
@@ -78,26 +90,35 @@ seq_along(gen) %>%
   })
 }
 #create structure inputs for downsampling of dart
-create_str_input_subsets <- function(mode = c("normal", "K1")){
-  pelo <- dartR::gi2gl(pelo)
-1:length(s) %>%
+create_str_input_subsets <- function(sp = c("hyla", "pelo")){
+  #gen is a genind object
+  datset <- paste0("dart_", sp)
+  gen_object <- gen[[grep(datset, names(gen))]] %>% dartR::gi2gl()
+  #adjust number of loci to subsample to max no. loci of dataset
+  ss <- s[s < adegenet::nLoc(gen_object)]
+  #determine lambda
+  assertthat::assert_that(!is.null(lambda))
+  l <- lambda[grepl(datset, lambda$dataset), 2]
+  #end determine lambda
+seq_along(ss) %>%
 sapply(function(x){
-  int <- sample(1:adegenet::nLoc(pelo), s[x], replace = FALSE)
-  s_pelo <- pelo[, int]
-  if (mode == "K1") dirn <- "strK1_" else if (mode == "normal") dirn <- "str_"
-  dir_str <- file.path("data/intermediate", paste0(dirn, s[x]))
+  int <- sample(1:adegenet::nLoc(gen_object), ss[x], replace = FALSE)
+  s_gen <- gen_object[, int]
+  dirn <- "str"
+  dir_str <- file.path("data/intermediate",
+    paste(dirn, sp, ss[x], sep = "_"))
   dir.create(dir_str, showWarnings = T)
-  str_file <- file.path(dir_str, paste0(s[x], ".str"))
-  edit_mainparams(gl = s_pelo, name = s[x],
+  str_file <- file.path(dir_str, paste0(ss[x], ".str"))
+  edit_mainparams(gl = s_gen, name = ss[x],
       str_file = str_file, dir_str = dir_str)
-  edit_extraparams(gl = s_pelo, name = s[x],
-      str_file = str_file, dir_str = dir_str, mode = mode)
-  if (class(s_pelo) == "genind"){
-    hierfstat::genind2hierfstat(s_pelo) %>%
-    dplyr::mutate(pop = as.factor(indNames(s_pelo))) %>%
+  edit_extraparams(gl = s_gen, name = ss[x],
+      str_file = str_file, dir_str = dir_str, mode = "normal", lambdapar = l)
+  if (class(s_gen) == "genind"){
+    hierfstat::genind2hierfstat(s_gen) %>%
+    dplyr::mutate(pop = as.factor(adegenet::indNames(s_gen))) %>%
     hierfstat::write.struct(fname = str_file)
-    } else if (class(s_pelo) == "genlight") {
-    dartR::gl2structure(s_pelo, outfile = str_file)
+    } else if (class(s_gen) == "genlight") {
+    dartR::gl2structure(s_gen, outfile = str_file)
   }
   })
 }
