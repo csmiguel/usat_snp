@@ -21,10 +21,9 @@ dor <- c("dart_hyla", "usat_hyla", "dart_pelo", "usat_pelo")
 gen <- readRDS("data/intermediate/gen_consolidated_filtered.rds")
 gen <- gen[match(dor, names(gen))]
 
-#ancestries for major clusters
-qclumpak <- readRDS("data/intermediate/clumpak_major.rds")
-# remove subset of loci
-qclumpak %<>% .[grep("^[a-z]", names(qclumpak))] %>% {.[match(dor, names(.))]}
+#clumpak data with ancestries arranged for each species~K.
+mean_anc_arranged <-
+  readRDS("data/intermediate/population_ancestry_arranged.rds")
 
 #load plotting function
 source("code/functions/map_distribution.r")
@@ -33,8 +32,7 @@ source("code/functions/centroid_sf.r")
 #colors for ancestries
 source("code/parameters/structure_colors.r")
 
-#assertions
-
+#assertions structure of metadata is as expected
 assertthat::assert_that(seq_along(gen) %>% sapply(function(x){
   names(gen[[1]]@other$metadata) == c("sample_id", "locality",  "geometry")
 }) %>% all())
@@ -56,39 +54,18 @@ assertthat::assert_that(as.character(
 assertthat::assert_that(as.character(
   shp_pelo@data$BINOMIAL)[1] == "Pelobates cultripes")
 
-
 #compute centroids for each metadata
 centroids <-
   seq_along(gen) %>%
   lapply(function(x){centroid_sf(gen[[x]]@other$metadata)})
 names(centroids) <- names(gen)
 
-#compute mean ancestries per location
-# it returns a list with the same structure as qclumpak but with mean ancestries per location
-assertthat::assert_that(all(names(gen) == names(qclumpak)))
-mean_anc <-
-  seq_along(gen) %>%
-  lapply(function(x){
-    qlist <- qclumpak[[x]]
-    meta <- gen[[x]]@other$metadata
-    h <-
-      2:length(qlist) %>%
-      lapply(function(y){
-        split(qlist[[y]], meta$locality) %>%
-        lapply(function(s) apply(s, 2, mean)) %>%
-          do.call(what = rbind)
-        })
-    names(h) <- names(qclumpak[[1]])[2:length(qlist)]
-    h
-    })
-names(mean_anc) <- names(gen)
-
 #plot
 reso = 50000
 pdf(file = "data/final/maps_ancestry.pdf",
     height = 11, width = 8)
 par(mfrow = c(7, 4), mar = c(0.5, 0, 0.5, 0), lwd = 0.2)
-for (k in seq_along(mean_anc[[1]])){
+for (k in seq_along(mean_anc_arranged[[1]])){
   for (dataset in seq_along(gen)){
     plot(mapr, maxpixels = reso,
          breaks = c(0, 500, 1000, 1500, 2000, 3500),
@@ -101,7 +78,7 @@ for (k in seq_along(mean_anc[[1]])){
     plot(shpf, add = T, border = "black", col = grey(0.7, alpha = 0.3))
     #overplot ancestries as pieplots
     coo <- centroids[[names(gen)[dataset]]] %>% sfc_as_cols()
-    anc <- mean_anc[[names(gen)[dataset]]][[k]]
+    anc <- mean_anc_arranged[[names(gen)[dataset]]][[k]]
     mapplots::draw.pie(x = coo$longitude,
                        y = coo$latitude,
                        z = anc,

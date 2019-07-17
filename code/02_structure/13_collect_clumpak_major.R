@@ -83,9 +83,10 @@ names(mean_anc) <- names(gen)
 #   easiness of comparison when plotting.
 hylak <- reorder_ancestries(species = "hyla", mean_anc = mean_anc)
 pelok <- reorder_ancestries(species = "pelo", mean_anc = mean_anc)
-arranged_qclumpak <- c(hylak, pelok)
+mean_anc_arranged <- c(hylak, pelok)
 
 #4. save objects
 saveRDS(qclumpak, "data/intermediate/clumpak_major.rds")
 saveRDS(mean_anc, "data/intermediate/population_ancestry.rds")
-saveRDS(arranged_qclumpak, "data/intermediate/clumpak_arranged.rds")
+saveRDS(mean_anc_arranged,
+  "data/intermediate/population_ancestry_arranged.rds")
