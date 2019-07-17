@@ -1,2 +1,0 @@
--> for dartseq datasets edit lambda values by hand in the parameters file according to the mean lambda from "data/intermediate/lambda.rds"
--> for usat datasets, lambda is = 1.

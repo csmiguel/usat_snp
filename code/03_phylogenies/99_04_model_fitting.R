@@ -10,10 +10,9 @@
 ###.............................................................................
 library(dplyr)
 
-bs_treemetrics <- readRDS <- ("data/intermediate/bs_treemetrics.rds")
+bs_treemetrics <- readRDS("data/intermediate/bs_treemetrics.rds")
 #i tried to fit glm with binomial distirbution and others but they do not fit well the data.
-m1 <- lm(bs_tm~log(dnp), data = bs_treemetrics$dart_pelo)
-m2 <- glm(bs_tm~dnp*dnr, data = bs_treemetrics$dart_pelo, family = "binomial")
+m1 <- glm(bs_tm ~ dnp + dnr, data = bs_treemetrics$dart_pelo, family = "binomial")
 
 summary(m1)
 plot(bs_tm~dnp, data = bs_treemetrics$dart_pelo)

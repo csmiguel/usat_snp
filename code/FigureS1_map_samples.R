@@ -13,4 +13,4 @@ source("code/functions/map_distribution.r")
 gen <- readRDS("data/intermediate/gen_consolidated_filtered.rds")
 
 plot_samples(meta = gen,
-  name_plot = "data/final/Figure1_map_samples.pdf", res = 50000)
+  name_plot = "data/final/FigureS1_map_samples.pdf", res = 50000)
