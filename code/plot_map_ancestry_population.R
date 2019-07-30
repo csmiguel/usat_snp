@@ -30,7 +30,7 @@ source("code/functions/map_distribution.r")
 #load functions
 source("code/functions/centroid_sf.r")
 #colors for ancestries
-source("code/parameters/structure_colors.r")
+source("code/parameters/plotting_par.r")
 
 #assertions structure of metadata is as expected
 assertthat::assert_that(seq_along(gen) %>% sapply(function(x){
