@@ -1,18 +1,15 @@
 #!/bin/bash
-#put all your results in one folder ‘results_folder’
-#Go to the command line terminal and type:
-#1. prepare input file. It needs the below structure:
-# Structure results zipped into a single file
-# stresults.zip
+#this script creates input files for CLUMPAK for all datasets
+#inside a new created folder, data/intermediate/clumpak
+#ie:
+# datasetxx.zip
 # 	k1.zip
 #		k1/
-#			project_data_k1_run10_f
-#			project_data_k1_run1_f
+#			k1_run10_f
+#			k1_run1_f
 #			...
 #	k2.zip
 #		k2/
-#			...
-#1. 1. create folder STRUCTURE
 rm -rf mkdir data/intermediate/clumpak
 mkdir data/intermediate/clumpak
 

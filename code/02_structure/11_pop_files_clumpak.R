@@ -4,7 +4,7 @@
 # https://scholar.google.co.uk/citations?user=1M02-S4AAAAJ&hl=en
 # April 2019
 ###.............................................................................
-#GOAL: create podtopop populations_file for CLUMPAK
+#GOAL: create podtopop populations_file for CLUMPAK with popID from Table1.rds
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 library(dplyr)
@@ -18,9 +18,11 @@ meta <- readRDS(file = input_path2)
 #structure runs datasets
 str_files <- dir(path = "data/final", pattern = "run_")
 
-#names from gen object that correspond to the datset
+#names from gen object that correspond to the dataset
 gen_names <-
-  str_files %>% replace(grep("[0-9]", str_files), "run_dart_pelo") %>%
+  str_files %>%
+  replace(grep("pelo_[0-9]", str_files), "run_dart_pelo") %>%
+  replace(grep("hyla_[0-9]", str_files), "run_dart_hyla") %>%
   gsub(pattern = "run_", replacement = "")
 
 index_pop <- cbind(str_files, gen_names)
