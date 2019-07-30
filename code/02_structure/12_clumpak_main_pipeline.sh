@@ -13,6 +13,9 @@ pop_file=$(echo "$dataset"_populations_file)
 perl CLUMPAK.pl --id 1 \
   --dir "$h"/data/intermediate/clumpak/$dataset \
   --file $str_zipped \
-  --podtopop "$h"/data/intermediate/clumpak/$pop_file
+  --indtopop "$h"/data/intermediate/clumpak/$pop_file
 done
 cd -
+
+#for some reason in the distribution I have for CLUMPAK the populations_file
+#has to be passed to --indtopop and not to --podtopop (as the manual says).
