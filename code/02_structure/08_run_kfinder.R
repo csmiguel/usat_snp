@@ -7,20 +7,14 @@
 #GOAL: run kfinder for all runs
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
-#  REQUIRED FILES:
-#   Description:
-#   Inpath:
-#  OUTPUT:
-#    Description:
-#    Outpath:
-#  DEPENDENCIES:
-###.............................................................................
+
 library(dplyr)
 #read file with parameters
 #1. create parameters file
 # vector with folder names for each run
 runs <- dir("data/final", pattern = "run_", full.names = T)
 
+#run Kfinder for each "run" within each run folder
 runs %>%
   sapply(function(x){
     #get k values

@@ -26,7 +26,7 @@ mkdir data/intermediate/clumpak/$d
   do
   outdir=$(echo data/intermediate/clumpak/$d/K$k)
   mkdir $outdir
-  #list with runs within for Kx within dataset
+  #list with runs for Kx within dataset
     find $dataset -name *K"$k"_*_f | while read str_run
     #loop 3: iteration across runs within K
     do
