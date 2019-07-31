@@ -8,7 +8,7 @@ markers <- c("SNPs", "microsatellites")
 # colors:
 colm <- c("#1b9e77", "#7570b3")
 # BW:
-colmbw <- c("black", "white")
+colmbw <- c("black", "grey")
 # point:
 pchm <- c(21, 22)
 #linetype
