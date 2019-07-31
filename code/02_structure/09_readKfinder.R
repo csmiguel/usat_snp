@@ -29,7 +29,22 @@ names(kfinder_ls) <- kfinder %>%
   stringr::str_extract("run.*/") %>%
   gsub(pattern = "/", replacement = "")
 
-#best FILES
+# tidy kfinder results
+kfinder_tidy <-
+  kfinder_ls %>%
+    plyr::ldply() %>%
+    dplyr::as_tibble() %>%
+    dplyr::rename(dataset = .id) %>%
+    dplyr::mutate(marker = replace(dataset,
+        stringr::str_detect(dataset, "dart"), "SNPs") %>%
+        replace(stringr::str_detect(., "usat"), "microsatellites") %>%
+        replace(stringr::str_detect(., "[0-9]"), "SNPs") %>% as.factor) %>%
+    dplyr::mutate(species = replace(dataset,
+        stringr::str_detect(dataset, "pelo"), "P. cultripes") %>%
+        replace(stringr::str_detect(., "hyla"), "H. molleri") %>% as.factor) %>%
+    dplyr::mutate(Evanno = suppressWarnings(as.numeric(as.character(Evanno))))
+
+#2. best FILES
 best_files <-
   kfinder %>%
   sapply(function(x){
@@ -38,7 +53,7 @@ best_files <-
       sub(pattern = "^.* /", replacement = "/", .)
   })
 
-#Create Evanno plots and object to save
+#3. Create Evanno plots and object to save
 # read runs
 runs <- dir("data/final", pattern = "run_", full.names = T)
 # warning! very time consuming step:
@@ -58,7 +73,23 @@ h <-
   })
 names(h) <- sapply(runs, basename)
 
+#tidy Evanno
+evanno_tidy <-
+  h %>%
+  plyr::ldply() %>%
+  dplyr::as_tibble() %>%
+  dplyr::rename(dataset = .id) %>%
+  dplyr::mutate(marker = replace(dataset,
+            stringr::str_detect(dataset, "dart"), "SNPs") %>%
+            replace(stringr::str_detect(., "usat"), "microsatellites") %>%
+            replace(stringr::str_detect(., "[0-9]"), "SNPs") %>% as.factor) %>%
+  dplyr::mutate(species = replace(dataset,
+            stringr::str_detect(dataset, "pelo"), "P. cultripes") %>%
+            replace(stringr::str_detect(., "hyla"), "H. molleri") %>% as.factor)
+
 #save objects
 saveRDS(kfinder_ls, "data/intermediate/kfinder_ls.rds")
+saveRDS(kfinder_tidy, "data/intermediate/kfinder_tidy.rds")
 saveRDS(best_files, "data/intermediate/best_files_kfinder.rds")
 saveRDS(h, "data/intermediate/evanno.rds")
+saveRDS(evanno_tidy, "data/intermediate/evanno_tidy.rds")

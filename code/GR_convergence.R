@@ -16,8 +16,8 @@ library(magrittr)
 
 #load data
 gen <- readRDS("data/intermediate/gen_consolidated_filtered.rds")
-
 rhat_results <- readRDS("data/intermediate/rhat.rds")
+source("code/functions/ft_helper.r")
 
 #edit data
 # remove upper_ci column and round numbers
@@ -34,24 +34,6 @@ levels(rhat_results$usat$dataset) <-
     from = c("usat_hyla", "usat_pelo"),
     to = c("H. molleri", "P. cultripes")
   )
-
-## helper functions
-# 1. ft2ggplot function
-ft2ggplot <- function(x){
-  ggplot() +
-    theme_void() +
-    annotation_custom(grid::rasterGrob(x),
-                      xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
-}
-# 2. export flextable to Word table
-
-ft2word <- function(ft = NUll, name = "test.docx"){
-  #ft is a flextable
-  #name is the export path
-  h <- officer::read_docx()
-  h <- body_add_flextable(h, value = ft)
-  print(h, target = name)
-}
 
 ##add number of loci to dart
 h <- levels(rhat_results$dart$dataset)
@@ -70,7 +52,7 @@ tableSNPs <-
   dplyr::mutate(dataset = stringr::str_extract(
     as.character(dataset), "[1-9].*") %>% as.numeric()) %>%
   {rhat_edit <<- dplyr::arrange(., dataset, k)} %>%
-  reshape2::dcast(Species + dataset ~ k, value.var= "rhat") %>%
+  reshape2::dcast(Species + dataset ~ k, value.var = "rhat") %>%
   dplyr::mutate( dataset = as.factor(dataset)) %>%
   dplyr::rename("No. of loci" = dataset) %>%
   flextable::flextable() %>%
