@@ -25,3 +25,8 @@ colspwb <- c("black", "white")
 pchsp <- c(21, 22)
 # linetype
 ltysp <- c(1, 2)
+
+#NJ trees ggplot
+#color nodes nj
+coln <- c("red", "black")
+pchn <- c(16, 15)

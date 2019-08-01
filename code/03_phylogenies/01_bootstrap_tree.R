@@ -8,14 +8,7 @@
 #DESCRIPTION:
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
-#  REQUIRED FILES:
-#   Description:
-#   Inpath:
-#  OUTPUT:
-#    Description:
-#    Outpath:
-#  DEPENDENCIES:
-###.............................................................................
+
 library(adegenet)
 library(dplyr)
 library(ape)
