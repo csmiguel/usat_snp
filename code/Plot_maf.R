@@ -1,79 +1,86 @@
+##
 # (c) Miguel Camacho Sánchez
 # miguelcamachosanchez@gmail.com // miguelcamachosanchez.weebly.com
 # https://scholar.google.co.uk/citations?user=1M02-S4AAAAJ&hl=en
 # June 2019
 ###.............................................................................
-#GOAL: Plot results from maf filtering in SNPs from Pelobates
+#GOAL: Plot results from MAF from Hyla and Pelobates
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 
 library(dplyr)
-library(magrittr)
+library(ggplot2)
 
-bstree <- readRDS("data/intermediate/maf_bs_treemetrics.rds") %>% rev
+bstree <- readRDS("data/intermediate/maf_bs_treemetrics.rds")
 
-# plot parameters
-x_lab <- c("Distance to parent node", "Distance from root")
-max_dnr <- sapply(bstree, function(x) x$dnr) %>% unlist %>% max
-max_dnp <- sapply(bstree, function(x) x$dnp) %>% unlist %>% max
-x_lim <- matrix(c(0, max_dnp, 0, max_dnr), ncol = 2)
+source("code/parameters/plotting_par.r")
 
-#1. Point plots
-
-pdf(file = paste0("data/final/", "maf_bs", ".pdf"),
-    height = 9, width = 6.5)
-par(mfrow = c(2, 1), las = 1)
-for (i in 1:2){
-  plot(1, pch = 20,
-       xlab = x_lab[i],
-       ylab = "Bootstrap support",
-       xlim = x_lim[, i],
-       ylim = c(0, 1), type = "n")
-  for (p in seq_along(bstree)){
-    hh <- bstree[[p]]
-    points(as.numeric(as.matrix(hh[, i])),
-           hh$bs_tm, pch = 20, col = grey.colors(length(bstree))[p])
-  }
-  legend("bottomright", legend = names(bstree),
-         pch = 20, col = grey.colors(length(bstree)), bty = "n")
-}
-dev.off()
-
-#2. Boxplot
-
-#dataframe where col1 is bootstrap support and col2 is dataset
-s_bt_m <-
-  bstree %>% lapply(function(x) dplyr::select(x, bs_tm)) %>%
+#create friendly ggplot2 dataframe with bootstrap data for all datasets
+bt <-
+  #read subsampled datasets
+  readRDS("data/intermediate/maf_bs_treemetrics.rds") %>%
   reshape2::melt() %>%
-  dplyr::select(-variable) %>%
-  dplyr::rename(dataset = 2) %>%
-  tibble::as_tibble() %>%
-  dplyr::mutate(dataset = as.factor(dataset))
+  dplyr::filter(variable == "bs_tm") %>%
+  dplyr::as_tibble() %>%
+  dplyr::select(-1) %>%
+  dplyr::rename(maf = L2) %>%
+  dplyr::mutate(species = c("pelo", "hyla")[(grepl("hyla", L1)) + 1]) %>%
+  dplyr::select(-L1)
 
-#boxplot
-pdf(file = "data/final/maf_bs_boxplot.pdf", height = 5.5, width = 8)
-par(las = 1)
-boxplot(s_bt_m$value~s_bt_m$dataset, xlab = "MAF threshold",
-        ylab = "Bootstrap support",
-        col = "grey",
-        pch = 20, outcol = grey(0.7))
+##ggplot2
+plot_bs_maf <- function(mode = c("bw", "color")){
+  jitbox <- 0.003
+  #mode is color or black and white
+  if (mode == "color"){
+    colbx <- c("#347b34", "#c23803")
+    colpt <- colsp
+  } else if (mode == "bw"){
+    colbx <- c("black", "darkgrey")
+    colpt <- colmbw
+  }
 
-dev.off()
+  xlabss <- unique(bt$maf) %>% as.numeric() %>% sort()
 
-#3. Point plot linear model
-h <- s_bt_m
-# model
-m1 <- lm(value ~ as.numeric(as.character(dataset)), data = h)
-summary(m1)
-pr <- predict(m1,
-  newdata = data.frame(dataset = seq(0, 0.1, length.out = 1000)))
+    bt %>% dplyr::mutate(maf = as.factor(maf)) %>%
+    ggplot(aes(x = as.numeric(as.character(maf)), y = value, fill = species)) +
+    geom_point(data = . %>% filter(species == "hyla"),
+       aes(x = as.numeric(as.character(maf)) - jitbox,
+       y = value, colour = species), position = position_jitter(width = .001),
+       size = 1, shape = 16, alpha = .5) +
+    geom_point(data= . %>% filter(species == "pelo"),
+       aes(x = as.numeric(as.character(maf)) + jitbox,
+       y = value, colour = species), position = position_jitter(width = .001),
+       size = 1, shape = 16, alpha = .5) +
+    geom_boxplot(data = . %>% filter(species == "hyla"),
+       aes(group = maf, x = as.numeric(as.character(maf)) - jitbox, y = value),
+       outlier.shape = NA, alpha = .5, colour = colbx[1],
+       width = .004, coef = 0) +
+    geom_boxplot(data = . %>% filter(species == "pelo"),
+       aes(group = maf, x = as.numeric(as.character(maf)) + jitbox, y = value),
+       colour = colbx[2], outlier.shape = NA, alpha = .5,
+       width = .004, coef = 0) +
+    scale_color_manual(values = colpt, name = "Species",
+                       labels = c("H. molleri", "P. cultripes")) +
+    scale_fill_manual(values = colpt) +
+    stat_smooth(method = "lm", formula = y ~ x, ##
+                colour = "black", size = 0.5) +
+    theme_classic(base_size = 8) +
+    ylab("Bootstrap support") +
+    scale_x_continuous("Minor Allele Frequency",
+                  breaks = xlabss, labels = xlabss) +
+    scale_y_continuous(expand = c(0.02, 0)) +
+    guides(fill = FALSE,
+           color = guide_legend(
+             label.theme = element_text(face = "italic", size = 7))) +
+    theme(legend.position = "right",
+           legend.spacing.y = unit(0.2, "line"),
+           legend.key.height = unit(0.7, "line"),
+           legend.background = element_rect(fill = "transparent"))
+}
 
-pdf(file = "data/final/maf_model.pdf", height = 4.5, width = 6)
-plot(seq(0, 0.1, length.out = 1000),
-     pr,
-     ylab = "Bootstrap support",
-     xlab = "MAF", las = 1, type = "l", ylim = c(0, 1))
-points(jitter(as.numeric(as.character(h$dataset))),
-       h$value,
-       col = adjustcolor("blue", alpha.f = 0.2), pch = 20)
-dev.off()
+#generate plots
+plot_bs_maf(mode = "bw")
+ggsave("data/final/BS_maf_bw.pdf", width = 100, height = 56, units = "mm")
+
+plot_bs_maf(mode = "color")
+ggsave("data/final/BS_maf_color.pdf", width = 100, height = 56, units = "mm")

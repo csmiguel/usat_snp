@@ -33,6 +33,8 @@ mv data/final/Evanno_sd_colm.pdf data/article/SF3-2.pdf
 mv data/final/GR_convergence.pdf data/article/SF4.pdf
 #SF5
 mv data/final/maps_ancestry.pdf data/article/SF5.pdf
+#SF6
+mv data/final/BS_maf_color.pdf data/article/SF6.pdf
 
 #Tables
 #Table1
