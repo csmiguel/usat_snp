@@ -3,105 +3,127 @@
 # https://scholar.google.co.uk/citations?user=1M02-S4AAAAJ&hl=en
 # June 2019
 ###.............................................................................
-#GOAL: Plot results from subsampling SNPs from Pelobates
+#GOAL: Plot results from subsampling SNPs from Hyla and Pelobates
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
+
 library(dplyr)
 library(magrittr)
+library(dartR)
+library(ggplot2)
 
 gen <- readRDS("data/intermediate/gen_consolidated_filtered.rds")
+source("code/parameters/plotting_par.r")
+
 nloc_pelo <- gen$dart_pelo %>% adegenet::nLoc()
+nloc_hyla <- gen$dart_hyla %>% adegenet::nLoc()
+nloc_mhyla <- gen$usat_hyla %>% adegenet::nLoc()
+nloc_mpelo <- gen$usat_pelo %>% adegenet::nLoc()
 
-bstree <- readRDS("data/intermediate/s_bs_treemetrics.rds") %>%
-  {c(list(
-    dart_pelo = readRDS("data/intermediate/bs_treemetrics.rds")$dart_pelo), .)}
-
-bt <- readRDS("data/intermediate/bs_treemetrics.rds")
-bt %<>% .[!grepl("dart_pelo", names(bt))]
-
-names(bstree)[names(bstree) == "dart_pelo"] <- nloc_pelo
-
-# plot parameters
-x_lab <- c("Distance to parent node", "Distance from root")
-max_dnr <- sapply(bstree, function(x) x$dnr) %>% unlist %>% max
-max_dnp <- sapply(bstree, function(x) x$dnp) %>% unlist %>% max
-x_lim <- matrix(c(0, max_dnp, 0, max_dnr), ncol = 2)
-
-#1. Point plots
-
-pdf(file = paste0("data/final/", "subsampling_bs", ".pdf"),
-    height = 9, width = 6.5)
-  par(mfrow = c(2, 1), las = 1)
-  for (i in 1:2){
-  plot(1, pch = 20,
-       xlab = x_lab[i],
-       ylab = "Bootstrap support",
-       xlim = x_lim[, i],
-       ylim = c(0, 1), type = "n")
-  for (p in seq_along(bstree)){
-    hh <- bstree[[p]]
-    points(as.numeric(as.matrix(hh[, i])),
-        hh$bs_tm, pch = 20, col = grey.colors(length(bstree))[p])
-  }
-    legend("bottomright", legend = paste(names(bstree), "loci"),
-           pch = 20, col = grey.colors(length(bstree)), bty = "n")
-    }
-  dev.off()
-
-#2. Boxplot
-#labs for plot
-nl <- sapply(gen, adegenet::nLoc) %>% paste("loci")
-
-#dataframe where col1 is bootstrap support and col2 is dataset
-s_bt_m <-
-  c(bt, bstree) %>% lapply(function(x) dplyr::select(x, bs_tm)) %>%
+#create friendly ggplot2 dataframe with bootstrap data for all datasets
+bt <-
+  #read subsampled datasets
+  readRDS("data/intermediate/s_bs_treemetrics.rds") %>%
+  #concatenate lists within each dataset(all, subhyla, subpelo)
+  {c(list("all" = readRDS("data/intermediate/bs_treemetrics.rds")), .)} %>%
   reshape2::melt() %>%
-  dplyr::select(-variable) %>%
-  dplyr::rename(dataset = 2) %>%
-  tibble::as_tibble() %>%
-  dplyr::mutate(dataset = as.factor(dataset))
-#reorder levels
-s_bt_m$dataset <-
-  factor(s_bt_m$dataset,
-         levels = c("200", "500", "1000", "3000", "5000", "10000", "20000",
-                    "33144", "usat_pelo", "dart_hyla", "usat_hyla"))
+  dplyr::filter(variable == "bs_tm") %>%
+  dplyr::as_tibble() %>%
+  dplyr::select(-1) %>%
+  dplyr::mutate(species = c("pelo", "hyla")[(grepl("hyla",
+                                            L2) | grepl("hyla", L1)) + 1]) %>%
+  dplyr::mutate(marker = c("snp", "usat")[(grepl("usat", L2)) + 1]) %>%
+  dplyr::mutate(
+    nloci = stringr::str_replace(L2, "dart_hyla", as.character(nloc_hyla)) %>%
+      stringr::str_replace("dart_pelo", as.character(nloc_pelo)) %>%
+      stringr::str_replace("usat_pelo", as.character(nloc_mpelo)) %>%
+      stringr::str_replace("usat_hyla", as.character(nloc_mhyla)) %>%
+      as.numeric()
+  ) %>%
+  dplyr::select(-L1, -L2)
 
-lab <- paste(levels(s_bt_m$dataset),
-  nl[match(levels(s_bt_m$dataset), names(gen))]) %>%
-  gsub(pattern = " NA", replacement = "") %>%
-  gsub(pattern = "usat_hyla", replacement = "microsatellites \nH. molleri,") %>%
-  gsub(pattern = "usat_pelo",
-    replacement = "microsatellites \nP. cultripes,") %>%
-  gsub(pattern = "dart_hyla", replacement = "SNPs \nH. molleri,")
-colbp <- rep("grey", nlevels(s_bt_m$dataset))
-colbp[grep("usat", levels(s_bt_m$dataset))] <- grey(0.3)
+##ggplot2
+plot_bs_loci_subsampling <- function(mode = c("bw", "color")){
+  #mode is color or black and white
+  if (mode == "color"){
+    colbx <- c("#347b34", "#c23803")
+    colpt <- colsp
+  } else if (mode == "bw"){
+    colbx <- c("black", "darkgrey")
+    colpt <- colmbw
+  }
+xlabss <- unique(bt$nloci) %>% as.character %>%
+  {.[grepl(.,pattern = "00$")]} %>% as.numeric() %>% sort()
 
-#boxplot
-pdf(file = "data/final/bs_boxplot.pdf", height = 5.5, width = 8)
-par(mar = c(7, par()$mar[2:4]))
-boxplot(s_bt_m$value~s_bt_m$dataset, xlab = "Number of loci",
-        ylab = "Bootstrap support",
-        col = colbp,
-        pch = 20, outcol = grey(0.7), xaxt = "n", yaxt = "n")
-axis(1, at = seq_along(levels(s_bt_m$dataset)), labels = lab,
-  las = 2, cex.axis = 0.8)
-axis(2, at = seq(0, 1, 0.2), labels = seq(0, 1, 0.2), las = 1, cex.axis = 0.8)
-abline(v = length(bstree) - 0.5, lty = 2, lwd = 2)
-dev.off()
+p1 <-
+  bt %>% dplyr::filter(marker == "snp") %>%
+    dplyr::mutate(nloci = as.factor(nloci)) %>%
+  ggplot(aes(x = as.numeric(as.character(nloci)), y = value, fill = species)) +
+    geom_point(data = . %>% filter(species == "hyla"),
+     aes(x = as.numeric(as.character(nloci)) * .9,
+     y = value, colour = species), position = position_jitter(width = .03),
+     size = 1, shape = 16, alpha = .5) +
+    geom_point(data= . %>% filter(species == "pelo"),
+     aes(x = as.numeric(as.character(nloci)) * 1.1,
+     y = value, colour = species), position = position_jitter(width = .03),
+     size = 1, shape = 16, alpha = .5) +
+  geom_boxplot(data = . %>% filter(species == "hyla"),
+     aes(group = nloci, x = as.numeric(as.character(nloci)) * .9, y = value),
+     outlier.shape = NA, alpha = .5, colour = colbx[1], width = .05, coef = 0) +
+  geom_boxplot(data = . %>% filter(species == "pelo"),
+     aes(group = nloci, x = as.numeric(as.character(nloci)) * 1.1, y = value),
+     colour = colbx[2], outlier.shape = NA, alpha = .5, width = .05, coef = 0) +
+  scale_color_manual(values = colpt, name = "Species",
+     labels = c("H. molleri", "P. cultripes")) +
+  scale_fill_manual(values = colpt) +
+  stat_smooth(method = "lm", formula = y ~ log(x),
+    colour = "black", size = 0.5) +
+  theme_classic(base_size = 8) +
+  ylab("Bootstrap support") +
+    scale_x_log10("SNPs: no. of loci (log10 scale)",
+              breaks = xlabss, labels = xlabss) +
+  scale_y_continuous(expand = c(0.02, 0)) +
+  guides(fill = FALSE,
+         color = guide_legend(
+           label.theme = element_text(face = "italic", size = 7))) +
+  theme(legend.position = c(0.83, 0.12),
+        legend.spacing.y = unit(0.1, "line"),
+        legend.key.height = unit(0.5, "line"),
+        legend.background = element_rect(fill = "transparent"))
 
-#3. Point plot linear model
-meanbs <- sapply(bstree, function(x) mean(x$bs_tm))
-h <- s_bt_m %>% filter(!grepl("^[a-z]", dataset))
-# model
-m1 <- lm(value ~ log(as.numeric(as.character(dataset))), data = h)
-summary(m1)
-pr <- predict(m1, newdata = data.frame(dataset = seq(100, 33000, 1)))
+#Plot microsatellite data
+p2 <-
+bt %>% dplyr::filter(marker == "usat") %>%
+  dplyr::mutate(nloci = as.factor(nloci)) %>%
+  ggplot(aes(x = as.numeric(as.character(nloci)), y = value, fill = species)) +
+  geom_point(aes(x = species, y = value, colour = species),
+             position = position_jitter(width = .1),
+             size = 1, shape = 16, alpha = .5) +
+  geom_boxplot(aes(x = species, y = value, colour = species),
+             outlier.shape = NA, alpha = .5, width = .2,
+             colour = colbx, coef = 0) +
+  theme_classic(base_size = 8) +
+  scale_color_manual(values = colpt) +
+  scale_fill_manual(values = colpt) +
+  scale_x_discrete(name = "Microsatellites",
+    labels = c("H. molleri", "P. cultripes")) +
+  scale_y_continuous(expand = c(0.02, 0)) +
+  guides(fill = FALSE,
+         color = F) +
+  theme(axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(face = "italic"))
+cowplot::plot_grid(p1, NULL, p2, nrow = 1,
+  align = "h", rel_widths = c(1, -.05, .3))
+}
 
-pdf(file = "data/final/no_loci_model.pdf", height = 4.5, width = 6)
-plot(pr,
-     ylab = "Bootstrap support",
-     xlab = "Number of loci", las = 1, type = "l", ylim = c(0, 1))
-points(jitter(as.numeric(as.character(h$dataset))),
-       h$value,
-       col = adjustcolor("blue", alpha.f = 0.2), pch = 20)
-dev.off()
+#generate plots
+plot_bs_loci_subsampling(mode = "bw")
+ggsave("data/final/BS_loci_subsampling_bw.pdf",
+  width = 120, height = 70, units = "mm")
+
+plot_bs_loci_subsampling(mode = "color")
+ggsave("data/final/BS_loci_subsampling_color.pdf",
+       width = 120, height = 70, units = "mm")
