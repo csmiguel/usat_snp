@@ -11,10 +11,13 @@ ft2ggplot <- function(x){
 }
 
 # 2. export flextable to Word table
-ft2word <- function(ft = NUll, name = "test.docx", ...){
-  #ft is a flextable
-  #name is the export path
+ft2word <- function(ft = NULL, ftcaption = NULL, name = "test.docx", ...){
+  #ft, is a flextable
+  #name, is the export path
+  #ftcaption, is a table caption
   h <- officer::read_docx(...)
+  if (!is.null(ftcaption))
+    h <- officer::body_add_par(h, ftcaption)
   h <- flextable::body_add_flextable(h, value = ft)
   print(h, target = name)
 }

@@ -7,11 +7,13 @@
 #GOAL: Table with samples
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
+library(dplyr)
+library(flextable)
+
 #load consolidated genotypes
 gen <- readRDS("data/intermediate/gen_consolidated_filtered.rds")
-
-library(dplyr)
 source("code/functions/centroid_sf.r")
+source("code/functions/ft_helper.r")
 
 #one table with all data
 h <-
@@ -93,5 +95,15 @@ ppp <-
   dplyr::select(-new) %>%
   #create unique IDs per population
   tibble::rowid_to_column("ID")
+#export as word
+ft <-
+ppp %>% flextable::flextable() %>%
+  flextable::width(j = 5, 3.7) %>%
+  flextable::width(j = 2, 2) %>%
+  flextable::fontsize(size = 8, part = "body") %>%
+  flextable::fontsize(size = 10, part = "header")
+ft
+
+ft2word(ft = ft, name = "data/final/table1.docx", ftcaption = c("Table 1. Samples and their localities. In the sample column, we indicate the species(*P.c.* and *H.m*, to refer to *Pelobates cultripes* and *Hyla molleri*, respectively) and marker type (SNPs or microsatellite)."))
 
 saveRDS(ppp, "data/intermediate/table1.rds")
