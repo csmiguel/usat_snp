@@ -12,18 +12,13 @@
 library(dartR)
 library(dplyr)
 
-input_path <- "data/intermediate/gen_consolidated_filtered.rds"
+input_path <- "data/intermediate/shared_gen_consolidated_filtered.rds"
 gen <- readRDS(file = input_path)
+names(gen) <- paste0("shared_", names(gen))
 input_path2 <- "data/intermediate/lambda.rds"
 lambda <- readRDS(input_path2)
-
 source("code/functions/edit_params.r")
 source("code/parameters/boot.r")
 
 #1. Create STRUCTURE input files from dart and usat genotypes
 create_str_input(mode = "normal")
-
-#2. Create STRUCTURE input files from SNP downsampling genotypes
-
-create_str_input_subsets(sp = "hyla")
-create_str_input_subsets(sp = "pelo")

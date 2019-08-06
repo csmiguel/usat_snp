@@ -70,7 +70,7 @@ seq_along(gen) %>%
     if (grepl("usat", names(gen)[x])){
       l <- 1
       } else if (grepl("dart", names(gen)[x])){
-        l <- lambda[grepl(names(gen)[x], lambda$dataset), 2]
+      l <- lambda[grepl(gsub("shared_", "", names(gen)[x]), lambda$dataset), 2]
       }
     #end determine lambda
     dir_str <- file.path("data/intermediate", paste0(dirn, names(gen)[x]))
