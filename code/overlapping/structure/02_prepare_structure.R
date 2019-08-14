@@ -22,3 +22,5 @@ source("code/parameters/boot.r")
 
 #1. Create STRUCTURE input files from dart and usat genotypes
 create_str_input(mode = "normal")
+
+create_str_input_subsets(sp = "pelo")

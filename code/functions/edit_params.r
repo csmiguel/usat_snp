@@ -105,6 +105,7 @@ sapply(function(x){
   int <- sample(1:adegenet::nLoc(gen_object), ss[x], replace = FALSE)
   s_gen <- gen_object[, int]
   dirn <- "str"
+  if (length(grep("shared", names(gen))) > 0) dirn <- "str_shared"
   dir_str <- file.path("data/intermediate",
     paste(dirn, sp, ss[x], sep = "_"))
   dir.create(dir_str, showWarnings = T)
