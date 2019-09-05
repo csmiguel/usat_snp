@@ -126,6 +126,24 @@ assertthat::assert_that(
     levels(as.factor(gen$dart_pelo$other$metadata$locality)))
   )
 
+########## 2nd part ##########
+
+#Keep only shared individuals for Pelobates
+# remove individuals from genind obj
+# vector with individuals to keep
+samples_overlapped_dartusat <-
+  indNames(gen$dart_pelo)[(adegenet::indNames(gen$dart_pelo) %in% adegenet::indNames(gen$usat_pelo))]
+# new DART genind object
+gen[["dart_pelo"]] <-
+  gen$dart_pelo[row.names(gen$dart_pelo@tab) %in% samples_overlapped_dartusat]
+# new usat genind object
+gen[["usat_pelo"]] <-
+  gen$usat_pelo[row.names(gen$usat_pelo@tab) %in% samples_overlapped_dartusat]
+
+# check number of Individuals is
+assertthat::assert_that(nInd(gen[["usat_pelo"]]) == nInd(gen[["dart_pelo"]]))
+
+
 #consolite pop slot
 gen %<>% lapply(function(x){
   #assert metadata$sample_id are the same to indNames

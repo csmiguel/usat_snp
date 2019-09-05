@@ -53,12 +53,12 @@ p = NULL, burnin = NULL){
     pdf(paste0("data/final/convergence_", levelp, "_", method, ".pdf"))
     par(mfrow = n2mfrow(length(unique(pd$k))))
     for (K in min(pd$k):max(pd$k)){
-      pdk <- filter(pd, k == K) %>% select(-dataset, -k)
+      pdk <- filter(pd, k == K) %>% dplyr::select(-dataset, -k)
       x_lim <- c(1, max(it))
       y_lim <- range(pdk)
       if(method == "no_burnin"){
         burnin_cols <- c(1: which(as.numeric(names(p)) == burnin))
-        pdk <- filter(pd, k == K) %>% select(-burnin_cols)
+        pdk <- filter(pd, k == K) %>% dplyr::select(-burnin_cols)
         x_lim <- c(burnin, max(it))
         y_lim <- range(pdk)
       }
@@ -83,7 +83,7 @@ rhat <- function(p = NULL, burnin = NULL){
   #starting iteration after burnin
   start_itertion_number <- burnin + thinning_number
   burnin_cols <- c(1: which(as.numeric(names(p)) == burnin))
-  p %>% select(-burnin_cols[-c(1, 2)]) %>%
+  p %>% dplyr::select(-burnin_cols[-c(1, 2)]) %>%
   dplyr::mutate_if(is.factor, as.character) %>%
   plyr::dlply(c("dataset", "k"), function(x) {
   y <- t(as.matrix(x[, -c(1, 2), drop = FALSE]))

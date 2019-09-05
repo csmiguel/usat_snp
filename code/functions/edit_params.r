@@ -66,12 +66,14 @@ seq_along(gen) %>%
   sapply(function(x){
     if (mode == "K1") dirn <- "strK1_" else if (mode == "normal") dirn <- "str_"
     #determine lambda
+    if (mode == "normal"){
     assertthat::assert_that(!is.null(lambda))
     if (grepl("usat", names(gen)[x])){
       l <- 1
       } else if (grepl("dart", names(gen)[x])){
-      l <- lambda[grepl(gsub("shared_", "", names(gen)[x]), lambda$dataset), 2]
+        l <- lambda[grepl(names(gen)[x], lambda$dataset), 2]
       }
+    }
     #end determine lambda
     dir_str <- file.path("data/intermediate", paste0(dirn, names(gen)[x]))
     dir.create(dir_str, showWarnings = T)
@@ -105,7 +107,6 @@ sapply(function(x){
   int <- sample(1:adegenet::nLoc(gen_object), ss[x], replace = FALSE)
   s_gen <- gen_object[, int]
   dirn <- "str"
-  if (length(grep("shared", names(gen))) > 0) dirn <- "str_shared"
   dir_str <- file.path("data/intermediate",
     paste(dirn, sp, ss[x], sep = "_"))
   dir.create(dir_str, showWarnings = T)

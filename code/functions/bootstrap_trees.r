@@ -4,32 +4,33 @@
    #     "snp" is a genlight object
 bootstrap_nj <- function(gen, nboot = nboot, type = c("usat", "snp")){
   #assertions and conversions
-  assertthat::assert_that(class(gen) %in% c("genind", "genlight"),
-    msg = "not genind nor genlight")
+  source("code/functions/manhattan_dist.r")
+  assertthat::assert_that(class(gen) == "genind", msg = "not genind")
   if (type == "usat"){
     assertthat::assert_that(adegenet::nLoc(gen) < 100, msg = "too many loci")
-    genh <- hierfstat::genind2hierfstat(gen)
-    ind_n <- adegenet::indNames(gen)
-    gen_matrix <- genh[, -1] #genotypes without sample names
+    gen_matrix <- adegenet::genind2df(gen) %>% .[, -1] #convert genind 2 df
   }
   if (type == "snp"){
     assertthat::assert_that(adegenet::nLoc(gen) > 100, msg = "too few loci")
-    if (class(gen) == "genind") gen <- dartR::gi2gl(gen)
+    gen <- dartR::gi2gl(gen)
     gen_matrix <- as.matrix(gen)
   }
-  n_col <- ncol(gen_matrix)
+  n_col <- adegenet::nLoc(gen)
   zz <- list()
   #begin bootstrapping
   for (i in 1:nboot){
     #calculate distance matrices
     if (type == "usat"){
-      gen.d <- gen_matrix[, sample(1:n_col, size = n_col, replace = T)] %>%
-      {hierfstat::genet.dist(data.frame("pop" = ind_n, .), method = "Da")}
-      attr(gen.d, "Labels") <- ind_n #add sample names
+      gen.d <-
+        gen_matrix[, sample(1:n_col, size = n_col, replace = T)] %>%
+        setNames(1:n_col) %>%
+        adegenet::df2genind(ncode = 3, type = "codom") %>%
+        genind_manhattan()
   }
   else if (type == "snp"){
-    gen.d <- gen_matrix[, sample(1:n_col, size = n_col, replace = T)] %>%
-    dist()
+    gen.d <-
+      gen_matrix[, sample(1:n_col, size = n_col, replace = T)] %>%
+      stats::dist(method = "manhattan")
   } else (stop("define genotype format"))
   #neighbor joining trees
   zz[[i]] <- ape::njs(gen.d)

@@ -34,7 +34,10 @@ dd <- h$sample_id[which(duplicated(h$sample_id))] #dublicated ids
 #arrange by sample id
 h %>% dplyr::filter(sample_id %in% dd) %>% dplyr::arrange(sample_id)
 
-#there are some incongruences in the coordinates (difference in a hundreth of a degree) for some of the duplicated samples. I have checked at the coordinates on the original metadata and the publications and everything seems to be fine, so I do not where the error comes from.
+#there are some incongruences in the coordinates (difference in a hundreth of a
+#degree) for some of the duplicated samples. I have checked at the coordinates
+#on the original metadata and the publications and everything seems to be fine,
+#so I do not where the error comes from.
 
 #table 1: expanded including duplicates
 p <-
@@ -43,8 +46,8 @@ p <-
                                 ifelse(grepl("pelo", dataset), "P.c.", NA))) %>%
   dplyr::mutate(marker = ifelse(grepl("dart", dataset), "SNPs",
                      ifelse(grepl("usat", dataset), "microsatellites", NA))) %>%
-  select(-dataset) %>%
-  arrange(locality, sample_id)
+  dplyr::select(-dataset) %>%
+  dplyr::arrange(locality, sample_id)
 
 #table 2: compact
 
