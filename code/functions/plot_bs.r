@@ -1,24 +1,36 @@
 #plot bootstrap support against Dnr and Dns
 plot_bs <- function(mode = c("color", "bw")){
-  if (mode == "color") col1 <- rev(colm) else if (mode == "bw") col1 <- rev(colmbw)
+  if (mode == "color"){
+    col1 <- rev(colm)
+    col2 <- col1
+  } else if (mode == "bw"){
+    col1 <- rev(colmbw)
+    col2 <- c("darkgrey", "black")
+  }
   p <-
-    ggplot(data = plot_data) +
-    geom_point(mapping = aes(x = value, y = bs_tm,
-                             colour = marker, shape = marker)) +
+    ggplot() +
+    geom_ribbon(aes(x = value, ymin = bs_tm_lower, ymax = bs_tm_upper,
+                  fill = marker), size = 1e-5, alpha = 0.1, data = pred_data) +
+    geom_point(aes(x = value, y = bs_tm, colour = marker, shape = marker),
+               data = plot_data) +
+    geom_line(aes(x = value, y = bs_tm, color = marker), data = pred_data) +
     facet_grid(species ~ dist, scales = "free_x",
-               labeller = labeller(dist = labels_distance)) +
+               labeller = labeller(dist = labels_distance,
+                                   species = labels_species)) +
     labs(y = "Bootstrap support", x = "") +
-    theme(
-      strip.text.y = element_text(size = 10, face = "italic"),
-      strip.text.x = element_text(size = 10)
-    ) +
-    scale_color_manual(values = col1) +
-    scale_shape_manual(values = c(16, 16)) +
-    theme(legend.position = c(0.35, 0.3),
-           legend.background = element_rect(size = 0.2, linetype = "solid",
-                                            colour = "black"),
-           legend.text = element_text(colour = "black", size = 10),
-           legend.title =  element_blank())
+    theme(strip.text.y = element_text(size = 10, face = "italic"),
+          strip.text.x = element_text(size = 10)) +
+    scale_color_manual(values = col1,
+                       labels = c("SNPs", "microsatellites")) +
+    scale_fill_manual(values = col2, guide = FALSE) +
+    scale_shape_manual(values = c(16, 16), guide = FALSE) +
+    theme(legend.position = c(.3, .6),
+          legend.background = element_rect(size = 0.2,
+                                           linetype = "solid",
+                                           colour = "black"),
+          legend.text = element_text(colour = "black", size = 9),
+          legend.title =  element_blank(),
+          strip.text.x = element_blank())
 
   p <- cowplot::add_sub(p, label = c("Dnp"), x = 0.25, y = 3, vjust = 1,
     size = 12, vpadding = grid::unit(0, "lines")) %>%

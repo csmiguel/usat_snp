@@ -12,38 +12,15 @@ library(dplyr)
 library(ggplot2)
 library(cowplot)
 
-bstree <- readRDS("data/intermediate/bs_treemetrics.rds")
+plot_data <- readRDS("data/intermediate/bs_treemetricsPlot.rds")
+pred_data <- readRDS("data/intermediate/model_marker_pred_data.rds")
+
 source("code/parameters/plotting_par.r")
 source("code/functions/plot_bs.r")
 
-#rename datasets
-bstree
-names(bstree) <-
-  plyr::mapvalues(
-    x = names(bstree),
-    from = names(bstree),
-    to = c("SNPs H. molleri", "SNPs P. cultripes",
-           "microtellites H. molleri", "microtellites P. cultripes"))
-
-
-#2. ggplot2 plots (facetted)
-# format data for ggplot2
-plot_data <-
-  seq_along(bstree) %>%
-  lapply(function(x){
-    bstree[[x]] %>% mutate(dataset = as.factor(names(bstree)[x]))
-  }) %>% {do.call(rbind, .)} %>%
-  dplyr::mutate(species = as.character(dataset) %>%
-                  stringr::str_remove("[aA-zA]++ ")) %>%
-  dplyr::mutate(marker = as.character(dataset) %>%
-                  stringr::str_remove(" .*$")) %>%
-  {reshape2::melt(., id.vars = names(.)[-grep("dnr|dnp", names(.))])} %>%
-  tibble::as_tibble() %>%
-  dplyr::select(-dataset) %>%
-  dplyr::rename(dist = variable)
-
 #labels distances
 labels_distance <- c(dnp = "Dnp", dnr = "Dnr")
+labels_species <- c(hyla = "H. molleri", pelo = "P. cultripes")
 
 #produce plots
 plot_bs(mode = "bw")
