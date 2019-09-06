@@ -39,7 +39,7 @@ bs_treemetrics.s <-
 seq_along(gen) %>%
   lapply(function(z){
 #   subset data
-    gen1 <- gen[[z]] %>% dartR::gi2gl()
+    gen1 <- gen[[z]]
     original_tree <- lapply(tr, function(x) x[[1]])[[names(gen)[z]]]
 
 #   create trees from subsampled dataset
@@ -56,8 +56,7 @@ seq_along(gen) %>%
         #for each loci subsampling
         for (i in 1:n_sampling_replicas){
           #subsample s[j] loci without replacement
-          int <- sample(1:adegenet::nLoc(gen1), ss[j], replace = FALSE)
-          s_gen1 <- gen1[, int]
+          s_gen1 <- gen1[loc = sample(locNames(gen1), ss[j], replace = F)]
           #create nboots replicate trees
           if (i == 1)
            boots_trees <- bootstrap_nj(s_gen1, nboots, type = "snp")

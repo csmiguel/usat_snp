@@ -5,14 +5,15 @@
 bootstrap_nj <- function(gen, nboot = nboot, type = c("usat", "snp")){
   #assertions and conversions
   source("code/functions/manhattan_dist.r")
-  assertthat::assert_that(class(gen) == "genind", msg = "not genind")
+  assertthat::assert_that(class(gen) %in% c("genind", "genlight"),
+    msg = "not genind or genlight")
   if (type == "usat"){
     assertthat::assert_that(adegenet::nLoc(gen) < 100, msg = "too many loci")
     gen_matrix <- adegenet::genind2df(gen) %>% .[, -1] #convert genind 2 df
   }
   if (type == "snp"){
     assertthat::assert_that(adegenet::nLoc(gen) > 100, msg = "too few loci")
-    gen <- dartR::gi2gl(gen)
+    if (class(gen) == "genind") gen <- dartR::gi2gl(gen)
     gen_matrix <- as.matrix(gen)
   }
   n_col <- adegenet::nLoc(gen)
