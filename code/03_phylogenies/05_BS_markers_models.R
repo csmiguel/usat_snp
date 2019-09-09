@@ -32,6 +32,20 @@ data <- plyr::ldply(seq_along(raw_data), function(i) {
 }) %>%
 as_tibble()
 
+# 1. Compare BS averages between makers for each species
+
+bs_models <- plyr::dlply(data, c("species"), function(x) {
+  suppressWarnings({
+    glm(bs_tm ~ marker, data = x, family = "binomial") %>% summary()
+  })
+})
+
+sink("data/final/BS_models_means_marker.txt")
+bs_models
+sink()
+
+# 2. Compare change of Dnp and Dnr between markers for each species
+
 # Main processing
 ## fit models
 dnp_models <- plyr::dlply(data, c("species"), function(x) {
@@ -103,7 +117,7 @@ saveRDS(pred_data, "data/intermediate/model_marker_pred_data.rds")
 saveRDS(plot_data, "data/intermediate/bs_treemetricsPlot.rds")
 
 #sink results models
-sink("data/final/BS_markers_models.txt")
+sink("data/final/BS_models_dnpr_marker.txt")
 
 cat("Results from models:\n1.1. Dnr models")
 lapply(dnr_models, function(x) lapply(x, summary))
