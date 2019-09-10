@@ -92,5 +92,5 @@ sink("data/final/results.txt")
 cat(
   "Numbers of genotypes:\nAfter filtering, the dataset kept for analysis included a total", totalind, "individuals from", nrow(samples), "localities: ", indH," individuals of Hyla molleri (microtellites: n =" ,indHm,", ", locHm, "loci,", missHm," % missing data; SNPs: n = ", indHs, ",", locHs, " loci, ", missHs, " % missing data), from", popH, " localities, and ", indP," individuals of Pelobates cultripes (microtellites: n = ", indPm, ", ", locPm, "loci, ", missPm, "% missing data; SNPs: n = ", indPs, ",", locPs, "loci, ", missPs, " % missing data), from", popP, "localities\n")
 
-cat("Shared samples between datasets:\nFor H. molleri,", indHoverlap_n," out of the", indHs, ", individuals (", indHoverlap_p ,"%) in the SNP dataset were also genotyped for microsatellites, whereas for P. cultripes, the,", indPoverlap_n, ", out of the 90 individuals (", indPoverlap_p, "%) where also genotyped for microsatellites.")
+cat("Shared samples between datasets:\nFor H. molleri,", indHoverlap_n," out of the", indHs, ", individuals (", indHoverlap_p ,"%) in the SNP dataset were also genotyped for microsatellites, whereas for P. cultripes, the,", indPoverlap_n, ", out of the", indPm, "individuals (", indPoverlap_p, "%) where also genotyped for microsatellites.")
 sink()
