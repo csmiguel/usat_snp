@@ -28,7 +28,11 @@ reorder_ancestries <- function(species = c("hyla", "pelo"),
         #create a list of matrices to compare with same k for both datasets
         h <- list(anc[[1]][[x]], anc[[2]][[x]])
         names(h) <- names(anc)
-        starmie::clumpp(h)
+        st <- starmie::clumpp(h)
+        #for some reason starmie::clumpp can output the order of the matrices
+        # in a different one than to the input. So, I need to reorder them.
+        st$Q_list <- st$Q_list[match(names(st$Q_list), names(anc))]
+        st
       })
   names(results_clumpp) <- names(anc[[1]])[kvalues] #remane with K clusters
   #rearrange results of clumpp into a list of lists: dataset::K

@@ -4,12 +4,14 @@
 #Fig1
 cp data/final/trees_structure.pdf article/Fig1.pdf
 #Fig2
-cp data/final/DnrDnp_ggplot_bw.pdf article/Fig2bw.pdf
-cp data/final/DnrDnp_ggplot_color.pdf article/Fig2color.pdf
-
+cp data/final/SSC_markers.pdf article/Fig2color.pdf
+cp data/final/SSC_markers_BW.pdf article/Fig2bw.pdf
 #Fig3
-cp data/final/BS_loci_subsampling_bw.pdf article/Fig3bw.pdf
-cp data/final/BS_loci_subsampling_color.pdf article/Fig3col.pdf
+cp data/final/DnrDnp_ggplot_bw.pdf article/Fig3bw.pdf
+cp data/final/DnrDnp_ggplot_color.pdf article/Fig3color.pdf
+#Fig4
+cp data/final/BS_loci_subsampling_bw.pdf article/Fig4bw.pdf
+cp data/final/BS_loci_subsampling_color.pdf article/Fig4col.pdf
 
 #Supplementary figures
 #SF1
