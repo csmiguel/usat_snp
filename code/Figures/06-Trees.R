@@ -85,8 +85,8 @@ hh <-
                   from = names(gen),
                   to = c("SNPs H. molleri",
                          "SNPs P. cultripes",
-                         "microtellites H. molleri",
-                         "microtellites P. cultripes"))
+                         "microsatellites H. molleri",
+                         "microsatellites P. cultripes"))
                   ))
     ggtree::facet_widths(p2, widths = c(2, rep(0.3, k - 1))) #fix panel widths
   })

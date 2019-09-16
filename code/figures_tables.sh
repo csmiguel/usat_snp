@@ -29,14 +29,17 @@ cp data/final/Coverage_filteringdart_pelo.pdf article/SF2-6.pdf
 cp data/final/Locus_missingnessdart_hyla.pdf article/SF2-7.pdf
 cp data/final/Locus_missingnessdart_pelo.pdf article/SF2-8.pdf
 #SF3
-cp data/final/GR_convergence.pdf article/SF3.pdf
+cp data/final/convergence_dart_hyla_with_burnin.pdf article/SF3-1.pdf
+cp data/final/convergence_dart_pelo_with_burnin.pdf article/SF3-2.pdf
 #SF4
-cp data/final/bestk_metrics_colm.pdf article/SF4-1.pdf
-cp data/final/Evanno_sd_colm.pdf article/SF4-2.pdf
+cp data/final/GR_convergence.pdf article/SF4.pdf
 #SF5
-cp data/final/maps_ancestry.pdf article/SF5.pdf
+cp data/final/bestk_metrics_colm.pdf article/SF5-1.pdf
+cp data/final/Evanno_sd_colm.pdf article/SF5-2.pdf
 #SF6
-cp data/final/BS_maf_color.pdf article/SF6.pdf
+cp data/final/maps_ancestry.pdf article/SF6.pdf
+#SF7
+cp data/final/BS_maf_color.pdf article/SF7.pdf
 
 #Tables
 #Table1
