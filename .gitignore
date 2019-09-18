@@ -9,9 +9,7 @@
 .Rhistory
 .Rapp.history
 .RData
-data/intermediate
 etc
-data/final
 *recycled.R
 *.grd
 *.gri
