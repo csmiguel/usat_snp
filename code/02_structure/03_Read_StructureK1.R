@@ -23,9 +23,9 @@ lambda <- get_lambda()
   it <- ncol(p) - 2
 
 #plot convergence
-for (datset in 1:nlevels(p$dataset)){#for each dataset
+for (datset in 1:nlevels(p$dataset)){ #for each dataset
   levelp <- levels(p$dataset)[datset] #name of dataset
-  pd <- filter(p, dataset == levelp)#filter dataset
+  pd <- filter(p, dataset == levelp) #filter dataset
   pdf(paste0("data/final/convergence", levelp, ".pdf"))
   par(mfrow = n2mfrow(length(unique(pd$k))))
   for (K in min(pd$k):max(pd$k)){

@@ -17,12 +17,20 @@ tree_metrics <- function(tr, bs, external_ref_tree = NULL){
       }#reference tree
   bs <- bs / nboot #vector with bs values normalized to 1
   #Normalize length of the tree
-  # distance between all nodes (also tips) in the tree
-  maxd <- ape::cophenetic.phylo(tr1) %>% max()
+  #distance between tips only
+  disttips <- ape::cophenetic.phylo(tr1) %>% sort()
+  #distance between all tips and nodes, but selecting only the quandrant of the
+  # matrix with distances between tips
+  distnodes <- ape::dist.nodes(tr1)[1:Ntip(tr1), 1:Ntip(tr1)] %>% sort()
+  #asssert that the order of the columns is tips + nodes
+  assertthat::assert_that(all(disttips == distnodes),
+              msg = paste0("check order of tips and nodes in trees"))
+  #meaning that the bottom-right quadrant of the matrix corresponds to
+  #distances between internal nodes
+  maxd <- ape::dist.nodes(tr1)[(ape::Ntip(tr1) + 1):tr1$Nnode,
+                               (ape::Ntip(tr1) + 1):tr1$Nnode] %>% max()
   # normalize
   tr1$edge.length <- tr1$edge.length / maxd
-  #assert the max distance is 1 => normalization is correct
-  assertthat::assert_that(round(max(ape::cophenetic.phylo(tr1)), 3) == 1)
   #Convert to treeman object
   tm <- as(tr1, "TreeMan")
   # add bootstrap support to treeman

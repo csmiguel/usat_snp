@@ -9,9 +9,6 @@ cp data/final/SSC_markers_BW.pdf article/Fig2bw.pdf
 #Fig3
 cp data/final/DnrDnp_ggplot_bw.pdf article/Fig3bw.pdf
 cp data/final/DnrDnp_ggplot_color.pdf article/Fig3color.pdf
-#Fig4
-cp data/final/BS_loci_subsampling_bw.pdf article/Fig4bw.pdf
-cp data/final/BS_loci_subsampling_color.pdf article/Fig4col.pdf
 
 #Supplementary figures
 #SF1
@@ -39,7 +36,10 @@ cp data/final/Evanno_sd_colm.pdf article/SF5-2.pdf
 #SF6
 cp data/final/maps_ancestry.pdf article/SF6.pdf
 #SF7
-cp data/final/BS_maf_color.pdf article/SF7.pdf
+cp data/final/BS_loci_subsampling_bw.pdf article/SF7bw.pdf
+cp data/final/BS_loci_subsampling_color.pdf article/SF7col.pdf
+#SF8
+cp data/final/BS_maf_color.pdf article/SF8.pdf
 
 #Tables
 #Table1

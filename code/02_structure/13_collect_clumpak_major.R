@@ -79,6 +79,11 @@ mean_anc <-
   })
 names(mean_anc) <- names(gen)
 
+#assert row order is similar between datasets
+assertthat::assert_that(all(
+  rownames(mean_anc$dart_pelo$K2) == rownames(mean_anc$usat_pelo$K2),
+  rownames(mean_anc$dart_hyla$K2) == rownames(mean_anc$usat_hyla$K2)))
+
 #3. rearrange ancestries between datasets (usat vs snps) for each species for
 #   easiness of comparison when plotting.
 hylak <- reorder_ancestries(species = "hyla", mean_anc = mean_anc)
