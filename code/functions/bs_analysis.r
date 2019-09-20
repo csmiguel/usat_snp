@@ -27,8 +27,8 @@ tree_metrics <- function(tr, bs, external_ref_tree = NULL){
               msg = paste0("check order of tips and nodes in trees"))
   #meaning that the bottom-right quadrant of the matrix corresponds to
   #distances between internal nodes
-  maxd <- ape::dist.nodes(tr1)[(ape::Ntip(tr1) + 1):tr1$Nnode,
-                               (ape::Ntip(tr1) + 1):tr1$Nnode] %>% max()
+  maxd <- ape::dist.nodes(tr1)[(ape::Ntip(tr1) + 1):(tr1$Nnode + ape::Ntip(tr1)),
+                             (ape::Ntip(tr1) + 1):(tr1$Nnode + ape::Ntip(tr1))] %>% max()
   # normalize
   tr1$edge.length <- tr1$edge.length / maxd
   #Convert to treeman object
