@@ -45,9 +45,9 @@ mapr <- raster::raster(p_raster)
 p_pelo <- "data/raw/redlist_species_data_44f009a9-b3b2-4608-a818-24c3dd714900"
 p_hyla <- "data/raw/redlist_species_data_eff4cf11-63bb-4131-bba3-104c3358697b"
 shp_pelo <- rgdal::readOGR(dsn = p_pelo, layer = "data_0") %>%
-  sp::spTransform(mapr@crs)
+  sp::spTransform(mapr@crs) %>% raster::crop(extent(mapr))
 shp_hyla <- rgdal::readOGR(dsn = p_hyla, layer = "data_0") %>%
-  sp::spTransform(mapr@crs)
+  sp::spTransform(mapr@crs) %>% raster::crop(extent(mapr))
 #check I loaded the right layers
 assertthat::assert_that(as.character(
   shp_hyla@data$BINOMIAL)[1] == "Hyla arborea")

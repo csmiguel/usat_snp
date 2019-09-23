@@ -22,10 +22,6 @@ gen <- readRDS(file = input_path1) %>%
 input_path2 <- "data/intermediate/bt_trees.rds"
 tr <- readRDS(file = input_path2)
 
-#tree metrics from datasets
-input_path3 <- "data/intermediate/bs_treemetrics.rds"
-bs <- readRDS(input_path3)
-
 source("code/parameters/boot.r")
 source("code/functions/bootstrap_trees.r")
 source("code/functions/bs_analysis.r")
