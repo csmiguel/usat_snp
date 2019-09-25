@@ -1,11 +1,11 @@
 plot_samples <- function(meta = metadata, name_plot, res = res,
-  mode = c(1, 2)){
+  mode = c(1, 2, 3)){
 #meta is a metadata list where the name of each element has names of marker
 #and species. Each element is a sf object with #sample_id#locality#geometry
 #create map with the distribution of the samples and native
 #distribution of the species
 #res, resolution of raster. For fast plotting use 5.10^3. For high-res 5.10^4
-#mode is 1 for test mode and 2 for pretty plotting
+#mode is 1 for test mode and 2 for pretty plotting; 3 is for plotting #id
 library(dplyr)
 library(sf)
 library(raster)
@@ -86,6 +86,13 @@ for (i in seq_along(x)){
   if (mode == 2){
     text(pop_usat$longitude, y = pop_usat$latitude, labels = pop_usat$locality,
       cex = .3, pos = 1, offset = .3, col = "black", font = 2)
+  }
+  if (mode == 3){
+    t1 <- readRDS("data/intermediate/table1.rds")
+    text(pop_usat$longitude, y = pop_usat$latitude,
+      labels = paste(t1$ID[match(pop_usat$locality, t1$locality)],
+                     pop_usat$locality, sep = "-"),
+      cex = .2, pos = 1, offset = .3, col = "black", font = 2)
   }
 }
 dev.off()
