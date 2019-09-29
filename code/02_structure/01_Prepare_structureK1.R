@@ -12,7 +12,7 @@
 library(dartR)
 library(dplyr)
 
-input_path <- paste0("data/intermediate/gen_consolidated_filtered.rds")
+input_path <- "data/intermediate/gen_consolidated_filtered.rds"
 gen <- readRDS(file = input_path)
 source("code/functions/edit_params.r")
 

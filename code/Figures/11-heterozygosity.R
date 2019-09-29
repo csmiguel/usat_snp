@@ -14,6 +14,7 @@ library(grid)
 library(ggplot2)
 library(ggtree)
 library(tidytree)
+library(inbreedR)
 
 
 #bootstrap support
@@ -30,28 +31,20 @@ meta <- readRDS("data/intermediate/table1.rds")
 source("code/parameters/boot.r") #bootstrap parameters
 source("code/functions/plot_nj_trees.r") #function for plotting
 source("code/parameters/plotting_par.r") #plotting parameters
+source("code/functions/genind2inbreedR.r") #genind2 inbreedR
 
 ##
 het <-
   lapply(names(gen), function(z){
   #compute and map heterozygosity
-  l <- dartR::gi2gl(gen[[z]]) #select genetic dataset
-  if (grepl("usat", z)){ #for microsatellites reformat matrix to compute ht.
-    l <-
-      seq_along(gen[[z]]@loc.n.all) %>%
-      sapply(function(x){
-        lc <- gen[[z]]@loc.n.all
-        gen[[z]]@tab[,(cumsum(lc)[x] - (lc[x] - 1)):cumsum(lc)[x]] %>%
-          apply(1, function(y) sort(y, decreasing = T)[1])
-      })
-  }
-  #compute heterozygosity as the proportion of loci which are heterozygous
-  het <-
-    apply(l, 1, function(x){
-      ht <- sum(x == 1, na.rm = T) #number of heterozygous loci
-      no_loci <- sum(!is.na(x)) #number of loci
-      ht / no_loci
-    })
+  l <- dartR::gi2gl(gen[[z]]) %>% #select genetic dataset
+       as.matrix()
+  l[l == 2] <- 0 #reformat for inbreedR: homozygotes == 0.
+  if (grepl("usat", z)) #for microsatellites reformat matrix to compute ht.
+    l <- usatgenind2inbreedR(gen[[z]])
+  assertthat::assert_that(check_data2(l))
+  #standarized heterozygosity
+  het2 <- inbreedR::sMLH(l)
 })
 names(het) <- names(gen)
 ##
@@ -143,7 +136,7 @@ hh <-
 assertthat::assert_that(length(hh) == 4)
 ggpubr::ggarrange(hh[[1]], hh[[2]], hh[[3]], hh[[4]],
                   ncol = 2, nrow = 2, labels = c("A", "B", "C", "D"))
-ggsave("data/final/trees_heterygosity.pdf", height = 16, width = 11)
+ggsave("data/final/trees_heterozygosity.pdf", height = 16, width = 11)
 
 #plot correlation heterozyosity P. cultripes
 pdf("data/final/correlation_heterozygosity.pdf", width = 6, height = 4.5)
