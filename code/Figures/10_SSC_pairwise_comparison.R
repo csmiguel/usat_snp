@@ -11,6 +11,7 @@
 
 library(ggplot2)
 library(cowplot)
+library(dplyr)
 
 #import data with Symmetric similarity coefficients (SSC)
 plot_data <- readRDS("data/intermediate/SSC.rds")
@@ -37,7 +38,7 @@ ggplot(plot_data) +
     legend.box.background = element_rect(colour = "black", size = 0.2),
     legend.text = element_text(size = 10))
 
-ggsave("data/final/SSC_markers_color.pdf", units = "cm", height = 12, width = 18)
+ggsave("data/final/SSC_markers_color.pdf", units = "cm", height = 10, width = 18)
 
 #BW plot
 # create colors for point filling
@@ -59,4 +60,19 @@ ggplot(plot_data) +
           legend.box.background = element_rect(colour = "black", size = 0.2),
           legend.text = element_text(size = 10))
 
-ggsave("data/final/SSC_markers_BW.pdf", units = "cm", height = 12, width = 18)
+ggsave("data/final/SSC_markers_BW.pdf", units = "cm", height = 10, width = 18)
+
+#flip coordinates
+ggplot(plot_data) +
+    geom_point(aes(x = reorder(cluster, desc(cluster)), y = value, color = comp, shape = comp),
+               alpha = 1, position = position_jitter(0.1), size = 4) +
+    scale_color_manual(values = c("brown", colm),
+                       guide = guide_legend(reverse = T),
+                       name = "Pairwise comparison", labels = labs_legend) +
+    scale_shape_manual(values = c(0:2), guide = guide_legend(reverse = T),
+                       name = "Pairwise comparison", labels = labs_legend) +
+    ylab("Symmetric Similarity Coefficient") + xlab(NULL) +
+    theme(legend.position = c(0.3, 0.4),
+          legend.box.background = element_rect(colour = "black", size = 0.2),
+          legend.text = element_text(size = 10)) + coord_flip()
+ggsave("data/final/SSC_markers_color_flipped.pdf", units = "cm", height = 18, width = 10)
