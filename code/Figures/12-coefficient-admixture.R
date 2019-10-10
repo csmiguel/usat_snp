@@ -20,7 +20,7 @@ qpairwise <- readRDS("data/intermediate/coeff_admixture.rds")
 library(ggplot2)
 
 ggplot(qpairwise) +
-  geom_boxplot(aes(y = value_corrected, x = as.factor(L1)), width = 0.1) +
+  geom_boxplot(aes(y = ca, x = as.factor(k)), width = 0.1) +
   theme_classic() +
   ylab("Coefficient of admixture") +
   xlab("K") +

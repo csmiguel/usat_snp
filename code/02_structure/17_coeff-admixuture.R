@@ -21,17 +21,21 @@ library(ggplot2)
 qclumpak <- readRDS("data/intermediate/clumpak_major.rds")
 #select Pelobates data
 qclumpak <- qclumpak[grep(pattern = c("usat_pelo|dart_pelo"), x = names(qclumpak))]
+#coefficient of admixture
+ca <- function(x){
+  minq <- length(x) * (1 / length(x)) ^ 2
+  #x is a numeric vector with invidual memberships across k clusters
+  (sum(x ^ 2) - minq) / (1 - minq)
+}
 
-# computes admixture coefficient
+# pairwise computes admixture coefficient
 qpairwise <-
   lapply(seq_along(qclumpak[[1]]), function(k){
-    husat <- apply(qclumpak[["usat_pelo"]][[k]], 1, function(y) sum(y^2))
-    hdart <- apply(qclumpak[["dart_pelo"]][[k]], 1, function(y) sum(y^2))
+    husat <- apply(qclumpak[["usat_pelo"]][[k]], 1, ca)
+    hdart <- apply(qclumpak[["dart_pelo"]][[k]], 1, ca)
     h <- hdart - husat
   }) %>% reshape2::melt() %>%
   dplyr::filter(L1 > 1)
-
-qpairwise$value_corrected <-
-  apply(qpairwise, 1, function(x) x[1] / (1 - sum(rep(1 / x[2], x[2]) ^ 2)))
+names(qpairwise) <- c("ca", "k")
 
 saveRDS(qpairwise, "data/intermediate/coeff_admixture.rds")
