@@ -55,10 +55,9 @@ hh <-
     tree <- full_join(tr1, het2nodes, by = "node")
     #create object color for nodes
     nodecol <- bt[[z]]
+    coln[1] <- "white"
     nodecol[nodecol < thresh * nboot] <- coln[1]#color nodes bt BS
     nodecol[nodecol != coln[1]] <- coln[2]
-    #create object with shape for nodes
-    pchnod <- plyr::mapvalues(nodecol, coln, pchn) %>% as.numeric
     #create dataframe with pop ids (as in Table 1)
     ids <-
       data.frame(sample_id = tr[[z]][[1]]$tip.label) %>%
@@ -70,9 +69,13 @@ hh <-
     #base tree
     p <-
       ggtree::ggtree(tree, color = "darkgrey") + #plot tree
-      geom_nodepoint(aes(color = het), size = 3) + #nodes
-      scale_color_gradientn(colours = rev(c("red", "orange", "green", "cyan", "blue"))) +
-      theme(legend.position = c(.05, .85))
+      ggtree::geom_nodepoint(aes(color = het), size = 3) + #sMLH
+      scale_color_gradientn(
+        colours = rev(c("red", "orange", "green", "cyan", "blue")),
+        breaks = seq(0, 2, 0.2)) +
+      ggtree::geom_nodepoint(color = nodecol, size = 1) + #BS
+      theme(legend.position = c(.05, .85)) +
+      labs(color = "sMLH")
     # add tip labels
     p <- p %<+% ids + ggtree::geom_tiplab(aes(
       label = paste(ID, ids$sample_id, sep = "-")),
@@ -92,18 +95,20 @@ hh <-
                               stat = "identity")
     }
     p2 <- p + theme_tree2(
-      legend.position = c(.05, .85),
+      legend.position = c(.05, .9),
       legend.background = element_blank(),
       panel.spacing = unit(0.1, "lines"), #fix spacing between panels
             strip.background = element_rect(fill = NA, colour = NA), #remove bg
-            axis.text.x = element_text(size = 6)) + #x axis label size
-      scale_x_continuous(#breaks = c(0, 0.25, 0.5, 0.75, 1), #manual ticks
-        #labels = c("","0.25", "", ".75", ""), #manual labels
-        expand = c(0, 0)) + #controls separation between panels
+      axis.line.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      axis.text.x = element_blank()) + #x axis label size
+      scale_x_continuous(expand = c(0, 0)) + #controls separation between panels
       scale_y_continuous(expand = c(0.01, 0.01)) + # gap bt top/bottom labs
       scale_fill_manual(values = str_col) + #color according to structure
-      xlim_expand(c(0, max(p$data$x) * 1.3), "Tree") + #expand to fit indNames
-      guides(fill = FALSE)
+      xlim_expand(c(max(p$data$x) * -0.1, max(p$data$x) * 1.3), "Tree") + #expand to fit indNames
+      guides(fill = FALSE,
+      colour = guide_colourbar(barheight = 5,
+        draw.ulim = FALSE, draw.llim = FALSE))
     p2 <- ggtree::facet_labeller(p2,
                        c(Tree = plyr::mapvalues(#rename Tree with dataset
                          x = z,
@@ -120,15 +125,4 @@ hh <-
 assertthat::assert_that(length(hh) == 4)
 ggpubr::ggarrange(hh[[1]], hh[[2]], hh[[3]], hh[[4]],
                   ncol = 2, nrow = 2, labels = c("A", "B", "C", "D"))
-ggsave("data/final/trees_heterozygosity.pdf", height = 16, width = 11)
-
-#plot correlation heterozyosity P. cultripes
-pdf("data/final/correlation_heterozygosity.pdf", width = 6, height = 4.5)
-# assert order is the same for samples in both datasets
-assertthat::assert_that(
-  all(names(het[["usat_pelo"]]) == names(het[["dart_pelo"]])))
-plot(het[["usat_pelo"]], het[["dart_pelo"]],
-     ylab = "Ho SNPs P. cultripes",
-     xlab = "Ho microsatellites P. cultripes",
-     main = "Correlation Ho P. cultripes")
-dev.off()
+ggsave("data/final/combined_trees_heterozygosity.pdf", height = 16, width = 11)

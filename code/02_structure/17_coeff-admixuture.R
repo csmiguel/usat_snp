@@ -19,14 +19,10 @@ library(dplyr)
 library(ggplot2)
 
 qclumpak <- readRDS("data/intermediate/clumpak_major.rds")
+source("code/functions/coeff_admixture.r")
+
 #select Pelobates data
 qclumpak <- qclumpak[grep(pattern = c("usat_pelo|dart_pelo"), x = names(qclumpak))]
-#coefficient of admixture
-ca <- function(x){
-  minq <- length(x) * (1 / length(x)) ^ 2
-  #x is a numeric vector with invidual memberships across k clusters
-  (sum(x ^ 2) - minq) / (1 - minq)
-}
 
 # pairwise computes admixture coefficient
 qpairwise <-
