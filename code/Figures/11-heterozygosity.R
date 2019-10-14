@@ -121,14 +121,3 @@ assertthat::assert_that(length(hh) == 4)
 ggpubr::ggarrange(hh[[1]], hh[[2]], hh[[3]], hh[[4]],
                   ncol = 2, nrow = 2, labels = c("A", "B", "C", "D"))
 ggsave("data/final/trees_heterozygosity.pdf", height = 16, width = 11)
-
-#plot correlation heterozyosity P. cultripes
-pdf("data/final/correlation_heterozygosity.pdf", width = 6, height = 4.5)
-# assert order is the same for samples in both datasets
-assertthat::assert_that(
-  all(names(het[["usat_pelo"]]) == names(het[["dart_pelo"]])))
-plot(het[["usat_pelo"]], het[["dart_pelo"]],
-     ylab = "Ho SNPs P. cultripes",
-     xlab = "Ho microsatellites P. cultripes",
-     main = "Correlation Ho P. cultripes")
-dev.off()

@@ -74,7 +74,6 @@ hh <-
         colours = rev(c("red", "orange", "green", "cyan", "blue")),
         breaks = seq(0, 2, 0.2)) +
       ggtree::geom_nodepoint(color = nodecol, size = 1) + #BS
-      theme(legend.position = c(.05, .85)) +
       labs(color = "sMLH")
     # add tip labels
     p <- p %<+% ids + ggtree::geom_tiplab(aes(
