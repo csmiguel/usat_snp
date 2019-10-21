@@ -62,7 +62,7 @@ names(centroids) <- names(gen)
 
 #plot
 reso = 50000
-pdf(file = "data/final/maps_ancestry.pdf",
+pdf(file = "data/final/maps_ancestry10.pdf",
     height = 11, width = 8)
 par(mfrow = c(7, 4), mar = c(0.5, 0, 0.5, 0), lwd = 0.2)
 for (k in seq_along(mean_anc_arranged[[1]])){
