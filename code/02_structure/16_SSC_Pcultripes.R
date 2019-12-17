@@ -53,4 +53,4 @@ plot_data <-
                           "both")))
 
 #save data with Symmetric similarity coefficients ready to plot
-saveRDS(plot_data, "data/intermediate/SSC.rds")
+saveRDS(plot_data, "data/intermediate/SSC_pelo.rds")
