@@ -30,10 +30,11 @@ source("code/functions/plot_nj_trees.r") #function for plotting
 source("code/parameters/plotting_par.r") #plotting parameters
 
 # 1. Create ggtrees with bootstrap support and structure ancestries.
+str_cols <- list(dart = str_col, usat = usat_str_col2)
 
 hh <-
   #for each dataset do tree and facetted structure plots
-  lapply(names(gen), function(z){
+  lapply(names(gen)[c(1, 3, 2, 4)], function(z){
   #create object color for nodes
   nodecol <- bt[[z]]
   nodecol[nodecol < thresh * nboot] <- coln[1]#color nodes bt BS
@@ -77,7 +78,8 @@ hh <-
                        #labels = c("","0.25", "", ".75", ""), #manual labels
                        expand = c(0, 0)) + #controls separation between panels
     scale_y_continuous(expand = c(0.01, 0.01)) + # gap bt top/bottom labs
-    scale_fill_manual(values = str_col) + #color according to structure
+    #color according to structure. usat and snps have diff palettes
+    scale_fill_manual(values = str_cols[[gsub("_.*$", "", z)]]) +
     xlim_expand(c(0, max(p$data$x) * 1.3), "Tree") #expand tree to fit indNames
     p2 <- ggtree::facet_labeller(p2,
       c(Tree = plyr::mapvalues(#rename Tree with dataset

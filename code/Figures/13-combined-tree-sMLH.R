@@ -33,9 +33,11 @@ source("code/functions/plot_nj_trees.r") #function for plotting
 source("code/parameters/plotting_par.r") #plotting parameters
 
 # 1. Create ggtrees with bootstrap support and structure ancestries.
+str_cols <- list(dart = str_col, usat = usat_str_col2)
+
 hh <-
   #for each dataset do tree and facetted structure plots
-  lapply(names(gen), function(z){
+  lapply(names(gen)[c(1, 3, 2, 4)], function(z){
     tr1 <- tidytree::as.treedata(tr[[z]][[1]]) #convert tree to treedata
     het <- het[[z]]
     #compute ancestral states for heterozygosity
@@ -103,7 +105,7 @@ hh <-
       axis.text.x = element_blank()) + #x axis label size
       scale_x_continuous(expand = c(0, 0)) + #controls separation between panels
       scale_y_continuous(expand = c(0.01, 0.01)) + # gap bt top/bottom labs
-      scale_fill_manual(values = str_col) + #color according to structure
+      scale_fill_manual(values = str_cols[[gsub("_.*$", "", z)]]) +
       xlim_expand(c(max(p$data$x) * -0.1, max(p$data$x) * 1.3), "Tree") + #expand to fit indNames
       guides(fill = FALSE,
       colour = guide_colourbar(barheight = 5,
