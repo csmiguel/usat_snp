@@ -13,7 +13,6 @@ library(ggplot2)
 library(cowplot)
 
 plot_data <- readRDS("data/intermediate/bs_treemetricsPlot.rds")
-pred_data <- readRDS("data/intermediate/model_marker_pred_data.rds")
 
 source("code/parameters/plotting_par.r")
 source("code/functions/plot_bs.r")

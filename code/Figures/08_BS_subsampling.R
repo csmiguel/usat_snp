@@ -42,6 +42,9 @@ bt <-
   ) %>%
   dplyr::select(-L1, -L2)
 
+xlabss <- as.numeric(c("50", "200", "500", "1000", "3000", "5000", "10000"))
+assertthat::assert_that(all(xlabss %in% bt$nloci))
+
 ##ggplot2
 plot_bs_loci_subsampling <- function(mode = c("bw", "color")){
   #mode is color or black and white
@@ -52,8 +55,6 @@ plot_bs_loci_subsampling <- function(mode = c("bw", "color")){
     colbx <- c("black", "darkgrey")
     colpt <- colmbw
   }
-xlabss <- unique(bt$nloci) %>% as.character %>%
-  {.[grepl(.,pattern = "00$")]} %>% as.numeric() %>% sort()
 
 p1 <-
   bt %>% dplyr::filter(marker == "snp") %>%
@@ -63,7 +64,7 @@ p1 <-
      aes(x = as.numeric(as.character(nloci)) * .9,
      y = value, colour = species), position = position_jitter(width = .03),
      size = 1, shape = 16, alpha = .5) +
-    geom_point(data= . %>% filter(species == "pelo"),
+    geom_point(data = . %>% filter(species == "pelo"),
      aes(x = as.numeric(as.character(nloci)) * 1.1,
      y = value, colour = species), position = position_jitter(width = .03),
      size = 1, shape = 16, alpha = .5) +
@@ -80,7 +81,7 @@ p1 <-
     colour = "black", size = 0.5) +
   theme_classic(base_size = 8) +
   ylab("Bootstrap support") +
-    scale_x_log10("SNPs: no. of loci (log10 scale)",
+    scale_x_log10("natural logarithm of no. of SNPs",
               breaks = xlabss, labels = xlabss) +
   scale_y_continuous(expand = c(0.02, 0)) +
   guides(fill = FALSE,

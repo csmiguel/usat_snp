@@ -8,11 +8,11 @@ bootstrap_nj <- function(gen, nboot = nboot, type = c("usat", "snp")){
   assertthat::assert_that(class(gen) %in% c("genind", "genlight"),
     msg = "not genind or genlight")
   if (type == "usat"){
-    assertthat::assert_that(adegenet::nLoc(gen) < 100, msg = "too many loci")
+    if(adegenet::nLoc(gen) < 100) warning("too many loci")
     gen_matrix <- adegenet::genind2df(gen) %>% .[, -1] #convert genind 2 df
   }
   if (type == "snp"){
-    assertthat::assert_that(adegenet::nLoc(gen) > 100, msg = "too few loci")
+    if(adegenet::nLoc(gen) > 100) warning("too few loci")
     if (class(gen) == "genind") gen <- dartR::gi2gl(gen)
     gen_matrix <- as.matrix(gen)
   }

@@ -8,16 +8,15 @@ plot_bs <- function(mode = c("color", "bw")){
     col2 <- c("darkgrey", "black")
   }
   p <-
-    ggplot() +
-    geom_ribbon(aes(x = value, ymin = bs_tm_lower, ymax = bs_tm_upper,
-                  fill = marker), size = 1e-5, alpha = 0.1, data = pred_data) +
-    geom_point(aes(x = value, y = bs_tm, colour = marker, shape = marker),
-               data = plot_data) +
-    geom_line(aes(x = value, y = bs_tm, color = marker), data = pred_data) +
+    ggplot(plot_data) +
+    geom_point(aes(x = value, y = bs_tm, colour = marker, shape = marker)) +
+    geom_smooth(aes(x = value, y = bs_tm, colour = marker),
+                method = "lm") +
     facet_grid(species ~ dist, scales = "free_x",
                labeller = labeller(dist = labels_distance,
                                    species = labels_species)) +
     labs(y = "Bootstrap support", x = "") +
+    cowplot::theme_cowplot() +
     theme(strip.text.y = element_text(size = 10, face = "italic"),
           strip.text.x = element_text(size = 10)) +
     scale_color_manual(values = col1,

@@ -56,3 +56,6 @@ cat("\n\n1.2. Subsampling tests")
 subsampling_test
 
 sink()
+
+#save models
+saveRDS(subsampling_models, "data/intermediate/subsampling_models.rds")
