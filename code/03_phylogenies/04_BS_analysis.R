@@ -51,6 +51,15 @@ predloci <-
     exp( (btusat - coe["(Intercept)"]) / coe["log(nloci)"]) %>% round()
     }) %>% setNames(paste0("dart_", names(subsampling_models)))
 
+predloci80 <-
+  seq_along(subsampling_models) %>%
+  sapply(function(sp){
+    bt80 <- .8  #average bs to predict
+    coe <- subsampling_models[[sp]]$full$coefficients #coefficients of the model
+    #compute nloci needed to get a BS support in the SNP data similar to usats
+    exp( (bt80 - coe["(Intercept)"]) / coe["log(nloci)"]) %>% round()
+    }) %>% setNames(paste0("dart_", names(subsampling_models)))
+
 # 2.2 get metrics
 
 #load data genotypes
@@ -131,3 +140,4 @@ saveRDS(bs_treemetrics, "data/intermediate/bs_treemetrics.rds")
 # data for comparison
 saveRDS(bs_treemetrics_comp, "data/intermediate/bs_treemetrics_comp.rds")
 saveRDS(predloci, "data/intermediate/predloci.rds")
+saveRDS(predloci80, "data/intermediate/predloci.rds")

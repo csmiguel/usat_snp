@@ -13,7 +13,38 @@ library(dplyr)
 library(tibble)
 library(tidyr)
 
-#read dnp, dnr and bootstrap support from subset of 200 SNPs
+# 1. Compare BS averages between makers for each species using all data
+
+#read dnp, dnr and bootstrap support from subset of comparable SNPs
+raw_data_all <- readRDS("data/intermediate/bs_treemetrics.rds")
+
+# Preliminary processing
+## prepare data
+marker <- sapply(strsplit(names(raw_data_all), "_", fixed = TRUE), `[[`, 1)
+species <- sapply(strsplit(names(raw_data_all), "_", fixed = TRUE), `[[`, 2)
+data_all <-
+  plyr::ldply(seq_along(raw_data_all), function(i) {
+    x <- raw_data_all[[i]]
+    x$marker <- marker[i]
+    x$species <- species[i]
+    x
+  }) %>%
+  as_tibble()
+
+bs_models <- plyr::dlply(data_all, c("species"), function(x) {
+  suppressWarnings({
+    glm(bs_tm ~ marker, data = x, family = "binomial") %>% summary()
+  })
+})
+
+sink("data/final/BS_models_means_marker_all.txt")
+bs_models
+sink()
+
+rm(list = ls())
+# 2. Compare change of Dnp and Dnr between markers for each species
+
+#read dnp, dnr and bootstrap support from subset of comparable SNPs
 raw_data <- readRDS("data/intermediate/bs_treemetrics_comp.rds")
 
 # Preliminary processing
@@ -28,7 +59,6 @@ data <- plyr::ldply(seq_along(raw_data), function(i) {
 }) %>%
   as_tibble()
 
-# 1. Compare change of Dnp and Dnr between markers for each species
 ## fit models
 models <- plyr::dlply(data, c("species"), function(x) {
   suppressWarnings({
