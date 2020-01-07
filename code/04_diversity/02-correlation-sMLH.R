@@ -4,7 +4,7 @@
 # https://scholar.google.co.uk/citations?user=1M02-S4AAAAJ&hl=en
 # June 2019
 ###.............................................................................
-#GOAL: compute standarized multilocus heterozygosity
+#GOAL: compute correlation between sMLH usats vs SNPs
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 library(dplyr)
