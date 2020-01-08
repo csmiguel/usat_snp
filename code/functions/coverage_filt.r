@@ -102,34 +102,34 @@ total_coverage_filtering <- function(genlight, median_dev, include_plot = NULL,
   return(output_gen)
   }
 #takes genligth, plots individual missingness and returns same genlight
-plot_missingness_individual <- function(genlight, plot_name ){
+plot_callrate_individual <- function(genlight, plot_name ){
   #vector with individual missingness
   source("code/functions/ind_miss.r")
-  vector_missingness <- ind_miss(genlight)
+  vector_call_rate <- 1 - ind_miss(genlight)
   #plot
   colb <- adjustcolor("orange", alpha.f = 0.5)
   bz <- 20
   pdf(file.path(getwd(), paste0(plot_name, ".pdf")), width = 5, height = 4)
-  hist(vector_missingness, main = "",
-       xlab = "Missing data per individual", col = colb,
+  hist(vector_call_rate, main = "",
+       xlab = "Call rate per individual", col = colb,
        breaks = bz, xlim = c(0, 1))
-  abline(v = ind_miss_thresh, col = "red", lty = 2, lwd = 2)
+  abline(v = 1 - ind_miss_thresh, col = "red", lty = 2, lwd = 2)
   dev.off()
   genlight
 }
 #takes genligth, plots locus missingness and returns same genlight
-plot_missingness_locus <- function(genlight, plot_name ){
+plot_callrate_locus <- function(genlight, plot_name){
   #vector with individual missingness
   source("code/functions/ind_miss.r")
-  vector_missingness <- 1 - adegenet::other(genlight)$loc.metrics$CallRate
+  vector_missingness <- adegenet::other(genlight)$loc.metrics$CallRate
   #plot
   colb <- adjustcolor("orange", alpha.f = 0.5)
   bz <- 20
   pdf(file.path(getwd(), paste0(plot_name, ".pdf")), width = 5, height = 4)
   hist(vector_missingness, main = "",
-       xlab = "Missing data per locus", col = colb,
+       xlab = "Call rate per locus", col = colb,
        breaks = bz, xlim = c(0, 1))
-  abline(v = 1 - locus_callrate_threshold, col = "red", lty = 2, lwd = 2)
+  abline(v = locus_callrate_threshold, col = "red", lty = 2, lwd = 2)
   dev.off()
   genlight
 }

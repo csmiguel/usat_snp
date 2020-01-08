@@ -13,7 +13,7 @@ plot_frog <-
                aes(x = longitude, y = latitude, color = sMLH, size = 2)) +
     scale_colour_gradientn(colours = c("blue", "white", "red"),
                          limits = c(0, 2)) +
-    scale_fill_gradient(low = "white", high = "black") +
+    scale_fill_gradient(low = "gray90", high = "black") +
     theme_classic() +
     guides(size = FALSE) +
     ylab(NULL) +

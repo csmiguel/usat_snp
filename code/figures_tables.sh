@@ -43,8 +43,8 @@ cp data/final/BS_maf_color.pdf article/SF8.pdf
 
 #Tables
 #Table1
-cp data/final/table1.docx article/Table1.docx
+cp data/final/table1.docx article/TableS1.docx
 #Table S1
-cp data/final/GR_convergence.docx article/TableS1.docx
+cp data/final/GR_convergence.docx article/TableS2.docx
 #Table S2
-cp data/final/bestK_metrics.docx article/TableS2.docx
+cp data/final/bestK_metrics.docx article/TableS3.docx

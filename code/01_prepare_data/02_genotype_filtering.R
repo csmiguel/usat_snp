@@ -43,8 +43,8 @@ dart_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
     sp <- paste(names(gen)[[i]])
     cat(paste0("#log for ", sp), "\n")
     filt_gen <-
-    plot_missingness_individual(gen[[i]],
-      paste0("data/final/Individual_missingness", sp)) %>%
+    plot_callrate_individual(gen[[i]],
+      paste0("data/final/Individual_callrate_", sp)) %>%
     dartR::gl.filter.callrate(method = "ind",
     threshold = 1 - ind_miss_thresh, v = 5) %>%
     dartR::gl.filter.repavg(repavg_threshold, v = 5) %>%
@@ -55,8 +55,8 @@ dart_filt <- grep("dart", names(gen)) %>% #only for dart genotypes
     total_coverage_filtering(median_dev = max_coverage,
       include_plot = T, lower_end = F,
       plot_name = paste0("data/final/Coverage_filtering", sp)) %>%
-      plot_missingness_locus(
-        paste0("data/final/Locus_missingness", sp)) %>%
+      plot_callrate_locus(
+        paste0("data/final/Locus_callrate_", sp)) %>%
     dartR::gl.filter.callrate(method = "loc",
       threshold = locus_callrate_threshold, v = 5, recalc = T) %>%
     dartR::gl.filter.secondaries(method = sec_method, v = 5) %>%

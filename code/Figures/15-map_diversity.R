@@ -12,6 +12,7 @@ library(dplyr)
 library(maps)
 library(ggplot2)
 library(sf)
+library(raster)
 
 #load functions
 source("code/functions/centroid_sf.r")
