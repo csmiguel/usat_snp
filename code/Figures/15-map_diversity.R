@@ -17,6 +17,7 @@ library(raster)
 #load functions
 source("code/functions/centroid_sf.r")
 source("code/functions/map_diversity.r")
+source("code/parameters/plotting_par.r")
 
 #load data
 #genotypes
@@ -96,3 +97,49 @@ all <-
 
 cowplot::plot_grid(all, legend1, ncol = 2, rel_widths = c(1, 0.1))
 ggsave("data/final/map_diversity.pdf", width = 9, height = 6)
+
+#divesity map with residuals from 1:1 correlations
+#residuals
+residuals <- readRDS("data/intermediate/sMLH_residuals.rds")
+
+plot_residuals <-
+  #temporal object with unique coordinates per locality
+  median_het_ggplot2[-which(duplicated(median_het_ggplot2$locality)), ] %>%
+  #add coordinates to residuals
+  {dplyr::left_join(residuals, ., by = "locality")} %>%
+  dplyr::select(species, locality, res, longitude, latitude) %>%
+  dplyr::rename(dataset = species)
+
+p_res_hyla <-
+  plot_res(species = "H. molleri", plot_title = "residuals H. molleri")
+p_res_pelo <-
+  plot_res(species = "P. cultripes", plot_title = "residuals P. cultripes")
+
+#get legend
+legend_res <- cowplot::get_legend(p_res_hyla)
+
+#compose plot
+all_res <-
+  cowplot::plot_grid(
+    p_res_hyla + theme(legend.position = "none"),
+    p_res_pelo + theme(legend.position = "none"),
+    ncol = 2, nrow = 1, align = "hv",
+    labels = "AUTO")
+
+cowplot::plot_grid(all_res, legend_res, ncol = 2, rel_widths = c(1, 0.2))
+ggsave("data/final/map_diversity_residuals.pdf", width = 10, height = 5)
+
+##report diversity
+#H. molleri
+#mean ± SD northern lineage
+median_het_ggplot2 %>% dplyr::filter(dataset == "dart_hyla" & latitude > 41) %>% pull(sMLH) %>% {sapply(list(mean, sd), do.call, args = list(.))}
+#mean ± SD southern lineage
+median_het_ggplot2 %>% dplyr::filter(dataset == "dart_hyla" & latitude < 41) %>% pull(sMLH) %>% {sapply(list(mean, sd), do.call, args = list(.))}
+#localities with lowest values
+median_het_ggplot2 %>% dplyr::filter(dataset == "dart_hyla") %>% arrange(sMLH)
+#localities with highest values
+median_het_ggplot2 %>% dplyr::filter(dataset == "dart_hyla") %>% arrange(desc(sMLH))
+
+#H. molleri
+#mean ± SD northern lineage
+median_het_ggplot2 %>% dplyr::filter(dataset == "dart_pelo") %>% arrange(sMLH)

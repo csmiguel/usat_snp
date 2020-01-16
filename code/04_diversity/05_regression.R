@@ -4,7 +4,7 @@
 # https://scholar.google.co.uk/citations?user=1M02-S4AAAAJ&hl=en
 # June 2019
 ###.............................................................................
-#GOAL: compute correlation between sMLH usats vs SNPs
+#GOAL: compute residuals from regression sMLH snps vs usats with slope = 1.
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 library(dplyr)
@@ -24,16 +24,7 @@ data <-
   dplyr::select(species, locality, snps, usats) %>%
   dplyr::mutate(species = as.factor(species),
                 locality = as.factor(locality)) %>%
-  dplyr::as_tibble()
+  dplyr::as_tibble() %>%
+  dplyr::mutate(res = snps - usats)
 
-
-#pearson correlation
-p1.test <-
-  plyr::dlply(data, ~species, function(x){
-    cor.test(x$usats, x$snps, method = "pearson")
-    })
-
-#write results from correlation
-sink("data/final/correlation_sMLH.txt")
-p1.test
-sink()
+saveRDS(data, "data/intermediate/sMLH_residuals.rds")
