@@ -4,7 +4,8 @@
 # https://scholar.google.co.uk/citations?user=1M02-S4AAAAJ&hl=en
 # June 2019
 ###.............................................................................
-#GOAL: Plot trees with heterozygosity
+#GOAL: Plot sMLH and residuals. For the residuals we plotted residuals per
+# locality in H. molleri and median values of the residuals in P. cultripes.
 #PROJECT: usat_snp (https://github.com/csmiguel/usat_snp)
 ###.............................................................................
 library(dartR)
@@ -96,19 +97,33 @@ all <-
     labels = "AUTO")
 
 cowplot::plot_grid(all, legend1, ncol = 2, rel_widths = c(1, 0.1))
-ggsave("data/final/map_diversity.pdf", width = 9, height = 6)
+ggsave("data/final/map_diversity.pdf", width = 11, height = 7)
 
 #divesity map with residuals from 1:1 correlations
 #residuals
 residuals <- readRDS("data/intermediate/sMLH_residuals.rds")
 
-plot_residuals <-
+temp <-
   #temporal object with unique coordinates per locality
   median_het_ggplot2[-which(duplicated(median_het_ggplot2$locality)), ] %>%
   #add coordinates to residuals
   {dplyr::left_join(residuals, ., by = "locality")} %>%
   dplyr::select(species, locality, res, longitude, latitude) %>%
   dplyr::rename(dataset = species)
+
+temp_pelo <-
+  dplyr::filter(temp, dataset == "P. cultripes") %>%
+{split(., .$locality)}%>%
+  sapply(function(x) median(x$res)) %>%
+  as.data.frame() %>%
+  setNames("res") %>%
+  tibble::rownames_to_column(var = "locality") %>%
+  left_join(dplyr::select(h, -res), by = "locality") %>%
+  {.[-which(duplicated(.$locality)),]}
+
+plot_residuals <-
+  dplyr::filter(temp, dataset == "H. molleri") %>%
+  rbind(temp_pelo)
 
 p_res_hyla <-
   plot_res(species = "H. molleri", plot_title = "residuals H. molleri")
