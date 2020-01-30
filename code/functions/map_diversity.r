@@ -11,6 +11,8 @@ plot_frog <-
               aes(x = long, y = lat, group = group)) +
     geom_point(data = dplyr::filter(median_het_ggplot2, dataset == genotypes),
                aes(x = longitude, y = latitude, color = sMLH, size = 1.8)) +
+    geom_text(data = dplyr::filter(median_het_ggplot2, dataset == genotypes),
+      aes(x = longitude, y = latitude, label = ID)) +
     scale_colour_gradientn(colours = c("blue", "white", "red"),
                          limits = c(0, 2)) +
     scale_fill_gradient(low = "gray90", high = "black") +

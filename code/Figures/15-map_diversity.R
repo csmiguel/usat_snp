@@ -25,6 +25,9 @@ source("code/parameters/plotting_par.r")
 gen <- readRDS("data/intermediate/gen_consolidated_filtered.rds")
 #median sMLH
 median_het <- readRDS("data/intermediate/median_het.rds")
+#read table with pops IDs
+t1 <- readRDS("data/intermediate/table1.rds") %>%
+  dplyr::select(ID, locality)
 #raster
 p_raster <- "data/raw/raster_iberian_peninsula.grd"
 mapr <- raster::raster(p_raster)
@@ -71,6 +74,7 @@ median_het_ggplot2 <-
       }) %>%
   rbind %>%
   dplyr::select(-1) %>%
+  dplyr::left_join(t1, by = "locality") %>%
   dplyr::as_tibble()
 
 #individual plots
@@ -98,6 +102,8 @@ all <-
 
 cowplot::plot_grid(all, legend1, ncol = 2, rel_widths = c(1, 0.1))
 ggsave("data/final/map_diversity.pdf", width = 11, height = 7)
+paste(t1$ID, t1$locality, sep = ". ") %>%
+  write(file = "data/final/ID_localities.txt")
 
 #divesity map with residuals from 1:1 correlations
 #residuals

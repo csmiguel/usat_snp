@@ -5,7 +5,7 @@
 # because for usat data there is no package to calculate Manhattan distances
 # I dealt manually with missing data as in stats::dist
 # It has been tested only with diploids
-# The core of this function calculates Manhattan distance for each loci and then
+# The core of this function calculates Manhattan distance for each locus and then
 # corrects for missing data.
 
 per.loc <- function(l) {
