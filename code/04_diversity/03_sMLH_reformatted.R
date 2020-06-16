@@ -85,6 +85,6 @@ diversity_reformatted <-
     x
   })
 
-write.table(diversity_reformatted,
-            file = "data/final/sMLH.txt", quote = F, row.names = F)
+write.csv(diversity_reformatted,
+            file = "data/final/sMLH.txt", quote = T, row.names = F)
 saveRDS(diversity_reformatted, "data/intermediate/sMLH_reformatted.rds")

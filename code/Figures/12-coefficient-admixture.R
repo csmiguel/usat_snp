@@ -18,14 +18,27 @@
 
 qpairwise <- readRDS("data/intermediate/coeff_admixture.rds")
 library(ggplot2)
+library(dplyr)
 
-ggplot(qpairwise) +
-  geom_boxplot(aes(y = ca, x = as.factor(k)), width = 0.1) +
-  theme_classic() +
-  ylab("Coefficient of admixture") +
-  xlab("K") +
-  scale_y_continuous(limits = c(-1, 1), expand = c(0, 0)) +
-  geom_abline(slope = 0, intercept = 0, linetype = 2, color = "blue", size = 0.3)
+qpairwise <-
+  qpairwise %>%
+  dplyr::mutate(k = as.factor(k)) %>%
+  dplyr::as_tibble()
 
+ggplot(qpairwise, aes(y = k, x = ca, fill = ..x..)) +
+  geom_density_ridges_gradient() +
+  scale_fill_gradient2(low = "red",
+                          mid = "white",
+                          high = "blue",
+                       name = "admixture") +
+  xlab("Coefficient of admixture") +
+  ylab("K") +
+  theme_ridges() +
+  scale_y_discrete(limits = c(rev(levels(qpairwise$k)))
+                  ) +
+  scale_x_continuous(limits = c(-1, 1),
+                     expand = c(0, 0),
+                     position = "top") +
+  geom_vline(xintercept = 0, linetype = 2, color = "blue", size = 0.5)
 
-  ggsave("data/final/coeff_admixture.pdf", height = 4, width = 6)
+ggsave("data/final/coeff_admixture.pdf", height = 4, width = 6)
