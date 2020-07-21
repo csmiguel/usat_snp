@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/182068809.svg)](https://zenodo.org/record/3953536)
+
 # Population genetics with SNPs and microsatellites
 
 **Manuscript**
@@ -13,3 +15,5 @@ Filtered genotypes used in analysis are available in the form of [genind](https:
 Intermediate results from scripts are stored in `data/intermediate`. Final outputs and figures are saved in `data/final`.
 
 The version of R packages used can be found [here](code/r-packages-versions.txt).
+
+The submitted version to E&E is [here](manuscript/).
