@@ -16,3 +16,5 @@ etc
 data/raw/metadata.xlsx
 borrar
 full_data
+!manuscript/*pdf
+manuscript/~$*
