@@ -4,7 +4,7 @@
 
 **Manuscript**
 
-Camacho-Sanchez, M., Velo-Antón, G., Hanson, J. O., Veríssimo, A., Martínez‐Solano, Í., Marques, A., … Carvalho, S. (2020). **Comparative assessment of range-wide patterns of genetic diversity and structure with SNPs and microsatellites: a case study with Iberian amphibians.**
+Camacho-Sanchez, M., Velo-Antón, G., Hanson, J. O., Veríssimo, A., Martínez‐Solano, Í., Marques, A., … Carvalho, S. (2020). **Comparative assessment of range-wide patterns of genetic diversity and structure with SNPs and microsatellites: a case study with Iberian amphibians.** *Ecology and Evolution*. https://doi.org/10.1002/ece3.6670
 
 We provide a comprehensive assessment on the patterns of genetic structure and diversity from using comparable sampling and analysis from microsatellites and SNPs.
 
@@ -15,5 +15,3 @@ Filtered genotypes used in analysis are available in the form of [genind](https:
 Intermediate results from scripts are stored in `data/intermediate`. Final outputs and figures are saved in `data/final`.
 
 The version of R packages used can be found [here](code/r-packages-versions.txt).
-
-The submitted version to E&E is [here](manuscript/).
